@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    .brand-bg { background-color: #0d2a4a; }
+    .brand-text { color: #0d2a4a; }
+    .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; }
+    .main-content { margin-left: 260px; padding: 2rem; }
+    #printableReceipt { display: none; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <aside class="sidebar brand-bg text-white p-6">
+    <div class="mb-10 text-center">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" class="w-32 mx-auto rounded">
+      <h2 class="mt-4 font-bold text-lg">Develish One Foundation</h2>
+    </div>
+    <nav class="space-y-4">
+      <button onclick="toggleForm('donations')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Record Donation</button>
+      <button onclick="toggleForm('expenses')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Record Expense</button>
+      <button onclick="toggleForm('letters')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Letter Generator</button>
+      <button onclick="showReports()" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Financial Reports</button>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="flex justify-between items-center mb-10 bg-white p-6 rounded shadow-sm">
+      <h1 id="pageTitle" class="text-3xl font-bold brand-text">Dashboard Summary</h1>
+      <div class="text-right text-sm">
+        <p>CIN: U88900UP2025NPL220764</p>
+        <p>PAN: AALCD5836D | TAN: LKND11538C</p>
+      </div>
+    </header>
+
+    <div id="formContainer" class="bg-white p-8 rounded-lg shadow-xl max-w-4xl">
+      </div>
+  </main>
+
+  <div id="printableReceipt" class="p-12 bg-white">
+    <div class="flex justify-between items-start border-b-2 border-gray-900 pb-6 mb-8">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" class="h-20">
+      <div class="text-right">
+        <h2 class="text-2xl font-bold">Develish One Foundation</h2>
+        <p class="text-xs">Ramwapur Dakahi, Post Katra Thana IKAUNA, Shravasti, UP 271845</p>
+        <p class="text-xs">Email: Info.devilish@gmail.com | +91 9721061660</p>
+      </div>
+    </div>
+
+    <div id="pdfContent" class="my-10 leading-relaxed">
+      </div>
+
+    <div class="mt-20 flex justify-between">
+      <div class="text-center">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhFCCMrfW_T9sbkL0ivNDtFLX1f_8LRU6z4LLxMHGCvX5fTQJvvifBry23Wqn3Jr3FMY_0sNlwH_4hnSP_fn1WERjATdSpqYLrimklfXt5KrON21BmUi-KDeh26GV-99Y9l4GxEGv7ZGhoKmvHHjLXWd0LDsR64wYUcTw8elway4LBDpsQ_i9YxOISigUWM/s500/1000058871.png" class="h-24 mx-auto">
+        <p class="text-xs mt-2 italic">Authorized Seal</p>
+      </div>
+      <div class="text-center">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicq7vqYmitksV4Llt2HpWb5oqW1ezBV7hNieFmW0zQxabfc4kZ26VAYmJCtvqIoXsqQGJLRpIjb4wf9Mc-ZfGPel3o9BWPX_9NEaD8JmFBJg5SFsgMoEgmEL6uEE7KXW65EV-ZHBjzrST3aw0R1Vs6kxOMqZy0xDaE_XXUsFroiauNnG-E8oqK7GUOIk2W/s320/1000058872.png" class="h-16 mx-auto">
+        <p class="text-sm font-bold border-t mt-2">Mr. Vishal Pandey (Director)</p>
+      </div>
+    </div>
+
+    <footer class="mt-16 pt-8 border-t flex items-center justify-between text-xs text-gray-500">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTF3YG9beR2H6-2KRt3qdBOEhY-YcD6UjMLEOh2E2eDzx0NuYlnCZm9E4134GA2aElJ97Ftw-AdSp6l8qGTvExYPG-f-FsqAqn1xihqRXebHkmPhOmjaJiX8piPQoDpwbRycI85yPhJerVKBblqwHHIQAvlCS-REi-1MhWGCwylVSicM5zNbaRMhMa_3PB/s320/1000058873.png" class="h-10">
+      <div class="text-right">
+        <p>Web: Develishngo.in | Socials: @Develishngo</p>
+        <p>CIN: U88900UP2025NPL220764</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function toggleForm(type) {
+      const container = document.getElementById('formContainer');
+      document.getElementById('pageTitle').innerText = type.toUpperCase();
+      
+      if(type === 'donations') {
+        container.innerHTML = `
+          <div class="space-y-4">
+            <input type="text" id="donorName" placeholder="Full Name" class="w-full p-3 border rounded">
+            <input type="number" id="amt" placeholder="Amount (INR)" class="w-full p-3 border rounded">
+            <select id="payMode" class="w-full p-3 border rounded">
+              <option>UPI</option><option>Online Transfer</option><option>Bank Transfer</option><option>Cash</option>
+            </select>
+            <input type="text" id="contact" placeholder="Contact Number" class="w-full p-3 border rounded">
+            <button onclick="saveAndPrint('Donations')" class="brand-bg text-white px-8 py-3 rounded">Generate Receipt</button>
+          </div>
+        `;
+      }
+    }
+
+    function saveAndPrint(entryType) {
+      const data = {
+        entryType: entryType,
+        name: document.getElementById('donorName').value,
+        amount: document.getElementById('amt').value,
+        mode: document.getElementById('payMode').value,
+        contact: document.getElementById('contact').value
+      };
+
+      google.script.run.withSuccessHandler(res => {
+        document.getElementById('pdfContent').innerHTML = `
+          <h3 class="text-xl font-bold text-center underline mb-6">DONATION RECEIPT</h3>
+          <p>Reference ID: <b>${res.ref}</b></p>
+          <p>Date: <b>${res.date}</b></p>
+          <p class="mt-4">Received with thanks from <b>${data.name}</b>, a sum of <b>INR ${data.amount}</b> 
+          towards the social activities of the foundation via <b>${data.mode}</b>.</p>
+        `;
+        const element = document.getElementById('printableReceipt');
+        element.style.display = 'block';
+        html2pdf().from(element).save(`${res.ref}_Receipt.pdf`);
+        setTimeout(() => { element.style.display = 'none'; }, 2000);
+      }).processEntry(data);
+    }
+  </script>
+</body>
+</html>
