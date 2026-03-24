@@ -1,120 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <base target="_top">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    .brand-bg { background-color: #0d2a4a; }
-    .brand-text { color: #0d2a4a; }
-    .sidebar { width: 260px; height: 100vh; position: fixed; left: 0; top: 0; }
-    .main-content { margin-left: 260px; padding: 2rem; }
-    #printableReceipt { display: none; }
+    .brand-primary { background-color: #0c4a6e; }
+    .brand-border { border-color: #0c4a6e; }
+    .nav-link { transition: 0.3s; cursor: pointer; border-radius: 8px; margin-bottom: 5px; }
+    .nav-link:hover { background-color: #075985; }
+    #pdf-output { display: none; }
+    .form-input { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 15px; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 flex h-screen overflow-hidden">
 
-  <aside class="sidebar brand-bg text-white p-6">
-    <div class="mb-10 text-center">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" class="w-32 mx-auto rounded">
-      <h2 class="mt-4 font-bold text-lg">Develish One Foundation</h2>
-    </div>
-    <nav class="space-y-4">
-      <button onclick="toggleForm('donations')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Record Donation</button>
-      <button onclick="toggleForm('expenses')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Record Expense</button>
-      <button onclick="toggleForm('letters')" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Letter Generator</button>
-      <button onclick="showReports()" class="w-full text-left p-3 hover:bg-blue-800 rounded transition">Financial Reports</button>
+  <aside class="brand-primary w-64 text-white flex flex-col p-6 shadow-2xl">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" class="w-24 mx-auto mb-4 bg-white p-1 rounded">
+    <h1 class="text-center font-bold text-sm mb-8 uppercase tracking-widest">Develish One Foundation</h1>
+    
+    <nav class="flex-grow">
+      <div onclick="route('dashboard')" class="nav-link p-3 flex items-center">Dashboard</div>
+      <div onclick="route('donations')" class="nav-link p-3 flex items-center">Donation Entry</div>
+      <div onclick="route('expenses')" class="nav-link p-3 flex items-center">Expense Entry</div>
+      <div onclick="route('salary')" class="nav-link p-3 flex items-center">Salary Payout</div>
+      <div onclick="route('letters')" class="nav-link p-3 flex items-center">Letter Head</div>
     </nav>
+    
+    <div class="text-[10px] opacity-70">
+      <p>CIN: U88900UP2025NPL220764</p>
+      <p>PAN: AALCD5836D</p>
+    </div>
   </aside>
 
-  <main class="main-content">
-    <header class="flex justify-between items-center mb-10 bg-white p-6 rounded shadow-sm">
-      <h1 id="pageTitle" class="text-3xl font-bold brand-text">Dashboard Summary</h1>
-      <div class="text-right text-sm">
-        <p>CIN: U88900UP2025NPL220764</p>
-        <p>PAN: AALCD5836D | TAN: LKND11538C</p>
-      </div>
-    </header>
-
-    <div id="formContainer" class="bg-white p-8 rounded-lg shadow-xl max-w-4xl">
-      </div>
+  <main class="flex-grow overflow-y-auto p-10">
+    <div id="view-container" class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+      <div class="text-center py-20">Loading Develish Management System...</div>
+    </div>
   </main>
 
-  <div id="printableReceipt" class="p-12 bg-white">
-    <div class="flex justify-between items-start border-b-2 border-gray-900 pb-6 mb-8">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" class="h-20">
+  <div id="pdf-output" class="bg-white p-12 text-gray-900" style="width: 800px; font-family: serif;">
+    <div class="flex justify-between items-center border-b-4 border-blue-900 pb-4 mb-6">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLrU2VI7_T72nNy8-ECJZZAJIZKsKfjnfKIUKlHG5pBVlS9_4rnU1Ewg6TtAF-J6EsgcOSdhTiGA0wvZjaImUiLWukjahUSnrVgVFGB7EcHJDftCJlzbYTCG4WefOrezuttIIPg1dgRVkGwhHk7SUGOpoGALVlEyfcHk-H4h7su5-G0v-ic3ec9BXMtQaX/s1080/1000059108.png" style="height: 100px;">
       <div class="text-right">
-        <h2 class="text-2xl font-bold">Develish One Foundation</h2>
-        <p class="text-xs">Ramwapur Dakahi, Post Katra Thana IKAUNA, Shravasti, UP 271845</p>
-        <p class="text-xs">Email: Info.devilish@gmail.com | +91 9721061660</p>
+        <h1 class="text-2xl font-bold text-blue-900">Develish One Foundation</h1>
+        <p class="text-sm">Ramwapur Dakahi, Post Katra Thana IKAUNA, Shravasti, UP 271845</p>
+        <p class="text-sm">Reg: +91 9721061660 | Email: Info.devilish@gmail.com</p>
       </div>
     </div>
 
-    <div id="pdfContent" class="my-10 leading-relaxed">
-      </div>
+    <div id="dynamic-pdf-content" class="min-h-[400px] text-lg leading-relaxed"></div>
 
-    <div class="mt-20 flex justify-between">
+    <div class="mt-12 flex justify-between items-end">
       <div class="text-center">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhFCCMrfW_T9sbkL0ivNDtFLX1f_8LRU6z4LLxMHGCvX5fTQJvvifBry23Wqn3Jr3FMY_0sNlwH_4hnSP_fn1WERjATdSpqYLrimklfXt5KrON21BmUi-KDeh26GV-99Y9l4GxEGv7ZGhoKmvHHjLXWd0LDsR64wYUcTw8elway4LBDpsQ_i9YxOISigUWM/s500/1000058871.png" class="h-24 mx-auto">
-        <p class="text-xs mt-2 italic">Authorized Seal</p>
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhFCCMrfW_T9sbkL0ivNDtFLX1f_8LRU6z4LLxMHGCvX5fTQJvvifBry23Wqn3Jr3FMY_0sNlwH_4hnSP_fn1WERjATdSpqYLrimklfXt5KrON21BmUi-KDeh26GV-99Y9l4GxEGv7ZGhoKmvHHjLXWd0LDsR64wYUcTw8elway4LBDpsQ_i9YxOISigUWM/s500/1000058871.png" style="height: 100px;">
+        <p class="text-xs">Office Seal</p>
       </div>
       <div class="text-center">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicq7vqYmitksV4Llt2HpWb5oqW1ezBV7hNieFmW0zQxabfc4kZ26VAYmJCtvqIoXsqQGJLRpIjb4wf9Mc-ZfGPel3o9BWPX_9NEaD8JmFBJg5SFsgMoEgmEL6uEE7KXW65EV-ZHBjzrST3aw0R1Vs6kxOMqZy0xDaE_XXUsFroiauNnG-E8oqK7GUOIk2W/s320/1000058872.png" class="h-16 mx-auto">
-        <p class="text-sm font-bold border-t mt-2">Mr. Vishal Pandey (Director)</p>
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicq7vqYmitksV4Llt2HpWb5oqW1ezBV7hNieFmW0zQxabfc4kZ26VAYmJCtvqIoXsqQGJLRpIjb4wf9Mc-ZfGPel3o9BWPX_9NEaD8JmFBJg5SFsgMoEgmEL6uEE7KXW65EV-ZHBjzrST3aw0R1Vs6kxOMqZy0xDaE_XXUsFroiauNnG-E8oqK7GUOIk2W/s320/1000058872.png" style="height: 70px; margin: auto;">
+        <p class="font-bold border-t border-black px-4 mt-2">Mr. Vishal Pandey (Director)</p>
       </div>
     </div>
 
-    <footer class="mt-16 pt-8 border-t flex items-center justify-between text-xs text-gray-500">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTF3YG9beR2H6-2KRt3qdBOEhY-YcD6UjMLEOh2E2eDzx0NuYlnCZm9E4134GA2aElJ97Ftw-AdSp6l8qGTvExYPG-f-FsqAqn1xihqRXebHkmPhOmjaJiX8piPQoDpwbRycI85yPhJerVKBblqwHHIQAvlCS-REi-1MhWGCwylVSicM5zNbaRMhMa_3PB/s320/1000058873.png" class="h-10">
+    <footer class="mt-10 border-t pt-4 text-[10px] text-gray-500 flex items-center justify-between">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTF3YG9beR2H6-2KRt3qdBOEhY-YcD6UjMLEOh2E2eDzx0NuYlnCZm9E4134GA2aElJ97Ftw-AdSp6l8qGTvExYPG-f-FsqAqn1xihqRXebHkmPhOmjaJiX8piPQoDpwbRycI85yPhJerVKBblqwHHIQAvlCS-REi-1MhWGCwylVSicM5zNbaRMhMa_3PB/s320/1000058873.png" style="height: 40px;">
       <div class="text-right">
-        <p>Web: Develishngo.in | Socials: @Develishngo</p>
-        <p>CIN: U88900UP2025NPL220764</p>
+        <p>Website: Develishngo.in | CIN: U88900UP2025NPL220764</p>
+        <p>PAN: AALCD5836D | TAN: LKND11538C | @Develishngo</p>
       </div>
     </footer>
   </div>
 
   <script>
-    function toggleForm(type) {
-      const container = document.getElementById('formContainer');
-      document.getElementById('pageTitle').innerText = type.toUpperCase();
-      
-      if(type === 'donations') {
+    window.onload = () => route('dashboard');
+
+    function route(view) {
+      const container = document.getElementById('view-container');
+      if (view === 'dashboard') {
+        container.innerHTML = `<h2 class="text-2xl font-bold mb-6">Financial Overview</h2><div id="stats" class="grid grid-cols-3 gap-4">Loading stats...</div>`;
+        google.script.run.withSuccessHandler(s => {
+          document.getElementById('stats').innerHTML = `
+            <div class="bg-blue-50 p-6 rounded border border-blue-200"><p class="text-xs uppercase">Total Donations</p><p class="text-2xl font-bold text-blue-800">₹${s.donations}</p></div>
+            <div class="bg-red-50 p-6 rounded border border-red-200"><p class="text-xs uppercase">Total Expenses</p><p class="text-2xl font-bold text-red-800">₹${s.expenses}</p></div>
+            <div class="bg-green-50 p-6 rounded border border-green-200"><p class="text-xs uppercase">Net Balance</p><p class="text-2xl font-bold text-green-800">₹${s.balance}</p></div>
+          `;
+        }).getStats();
+      } else if (view === 'donations') {
         container.innerHTML = `
-          <div class="space-y-4">
-            <input type="text" id="donorName" placeholder="Full Name" class="w-full p-3 border rounded">
-            <input type="number" id="amt" placeholder="Amount (INR)" class="w-full p-3 border rounded">
-            <select id="payMode" class="w-full p-3 border rounded">
-              <option>UPI</option><option>Online Transfer</option><option>Bank Transfer</option><option>Cash</option>
-            </select>
-            <input type="text" id="contact" placeholder="Contact Number" class="w-full p-3 border rounded">
-            <button onclick="saveAndPrint('Donations')" class="brand-bg text-white px-8 py-3 rounded">Generate Receipt</button>
-          </div>
+          <h2 class="text-2xl font-bold mb-6">New Donation Entry</h2>
+          <input id="name" type="text" placeholder="Donor Name" class="form-input">
+          <input id="amt" type="number" placeholder="Amount (INR)" class="form-input">
+          <select id="mode" class="form-input">
+            <option>UPI</option><option>Online Transfer</option><option>Bank Transfer</option><option>Cash</option>
+          </select>
+          <input id="contact" type="text" placeholder="Mobile Number" class="form-input">
+          <button onclick="submitData('Donations')" class="brand-primary text-white w-full p-4 rounded-lg font-bold">Save and Print Receipt</button>
+        `;
+      } else if (view === 'letters') {
+        container.innerHTML = `
+          <h2 class="text-2xl font-bold mb-6">Official Letter Generator</h2>
+          <input id="subject" type="text" placeholder="Subject" class="form-input">
+          <input id="recipient" type="text" placeholder="Recipient Name/Office" class="form-input">
+          <textarea id="content" rows="10" placeholder="Type letter content here..." class="form-input"></textarea>
+          <button onclick="submitData('Letters')" class="brand-primary text-white w-full p-4 rounded-lg font-bold">Generate Official Letter</button>
         `;
       }
     }
 
-    function saveAndPrint(entryType) {
-      const data = {
-        entryType: entryType,
-        name: document.getElementById('donorName').value,
-        amount: document.getElementById('amt').value,
-        mode: document.getElementById('payMode').value,
-        contact: document.getElementById('contact').value
-      };
+    function submitData(type) {
+      const payload = { entryType: type };
+      if (type === 'Donations') {
+        payload.name = document.getElementById('name').value;
+        payload.amount = document.getElementById('amt').value;
+        payload.mode = document.getElementById('mode').value;
+        payload.contact = document.getElementById('contact').value;
+      } else if (type === 'Letters') {
+        payload.subject = document.getElementById('subject').value;
+        payload.recipient = document.getElementById('recipient').value;
+        payload.content = document.getElementById('content').value;
+      }
 
       google.script.run.withSuccessHandler(res => {
-        document.getElementById('pdfContent').innerHTML = `
-          <h3 class="text-xl font-bold text-center underline mb-6">DONATION RECEIPT</h3>
-          <p>Reference ID: <b>${res.ref}</b></p>
-          <p>Date: <b>${res.date}</b></p>
-          <p class="mt-4">Received with thanks from <b>${data.name}</b>, a sum of <b>INR ${data.amount}</b> 
-          towards the social activities of the foundation via <b>${data.mode}</b>.</p>
+        if (res.status === "Success") {
+          preparePDF(type, payload, res);
+        }
+      }).processEntry(payload);
+    }
+
+    function preparePDF(type, data, res) {
+      const display = document.getElementById('dynamic-pdf-content');
+      if (type === 'Donations') {
+        display.innerHTML = `
+          <h2 class="text-center font-bold underline mb-10 mt-10">DONATION RECEIPT</h2>
+          <p class="mb-4">Receipt No: <b>${res.ref}</b> &nbsp;&nbsp;&nbsp; Date: <b>${res.date}</b></p>
+          <p>Received with thanks from <b>${data.name}</b>, the sum of <b>INR ${data.amount}</b> only, 
+          via <b>${data.mode}</b> towards foundation objectives.</p>
         `;
-        const element = document.getElementById('printableReceipt');
-        element.style.display = 'block';
-        html2pdf().from(element).save(`${res.ref}_Receipt.pdf`);
-        setTimeout(() => { element.style.display = 'none'; }, 2000);
-      }).processEntry(data);
+      } else if (type === 'Letters') {
+        display.innerHTML = `
+          <p class="text-right">Ref: ${res.ref}<br>Date: ${res.date}</p>
+          <p class="mb-6">To,<br><b>${data.recipient}</b></p>
+          <p class="font-bold mb-6">Subject: ${data.subject}</p>
+          <div class="whitespace-pre-line">${data.content}</div>
+        `;
+      }
+
+      const opt = { margin: 0, filename: `${res.ref}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+      const element = document.getElementById('pdf-output');
+      element.style.display = 'block';
+      html2pdf().set(opt).from(element).save().then(() => {
+        element.style.display = 'none';
+        alert("Entry saved and PDF downloaded successfully.");
+      });
     }
   </script>
 </body>
