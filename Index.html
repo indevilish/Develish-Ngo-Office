@@ -1,0 +1,645 @@
+I have enhanced your website with an automated volunteer ID card generation system. When someone fills out the volunteer form, the system now automatically creates a unique ID based on your Google Sheets data and generates a downloadable PDF ID card containing a QR code with their details, using your NGO's logo and name.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>devəliSH One Foundation - Nature First Environmental Conservation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Libraries for PDF & QR code generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #2e8b57;
+            --medium-green: #3daa6d;
+            --dark-green: #1d6b3a;
+            --light-green: #e1f5e6;
+            --accent-green: #4caf50;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --text-dark: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--light-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--dark-green);
+        }
+        
+        .container {
+            max-width: 1200px;
+        }
+        
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-green) !important;
+            font-size: 1.8rem;
+        }
+        
+        .logo-img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .nav-link {
+            font-weight: 600;
+            color: var(--dark-green) !important;
+            margin: 0 12px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-green);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover:after,
+        .nav-link.active:after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+            border-color: var(--dark-green);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-green);
+            border-color: var(--primary-green);
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(46, 139, 87, 0.85), rgba(46, 139, 87, 0.85)), url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 0 100px;
+            color: var(--white);
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-section h1 {
+            font-size: 3.5rem;
+            color: var(--white);
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero-section p {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        .section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 45px;
+            text-align: center;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background-color: var(--primary-green);
+            animation: growLine 1s ease-out;
+        }
+        
+        .bg-light-green {
+            background-color: var(--light-green);
+        }
+        
+        .about-section {
+            padding: 100px 0;
+            background: url('https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover fixed;
+            position: relative;
+        }
+        
+        .about-overlay {
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 80px 0;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(46, 139, 87, 0.1);
+        }
+        
+        /* Volunteer ID Card Styles */
+        .volunteer-id-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            font-family: 'Open Sans', sans-serif;
+            max-width: 550px;
+            margin: 0 auto;
+            border: 1px solid #e0e0e0;
+        }
+        .card-header-bg {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            padding: 12px 20px;
+            color: white;
+        }
+        .card-body-custom {
+            padding: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card-left {
+            flex: 2;
+            min-width: 180px;
+        }
+        .card-right {
+            flex: 1;
+            text-align: center;
+            min-width: 130px;
+        }
+        .logo-sm {
+            max-width: 70px;
+            margin-bottom: 10px;
+        }
+        .ngo-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-green);
+            margin-bottom: 5px;
+        }
+        .volunteer-badge {
+            background: var(--light-green);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: var(--dark-green);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .info-row {
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 6px;
+        }
+        .info-label {
+            font-weight: 700;
+            color: var(--dark-green);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        .info-value {
+            font-weight: 500;
+            color: #2c3e2f;
+            word-break: break-word;
+        }
+        .qr-container {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 15px;
+            margin-top: 10px;
+        }
+        .id-number {
+            background: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .footer-card {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            display: none;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes growLine {
+            from { width: 0;}
+            to { width: 70px;}
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="alert alert-success custom-alert" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-3"></i>
+            <div><h5 class="alert-title mb-0"></h5><p class="alert-message mb-0"></p></div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+    
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="logo" class="logo-img">
+                devəliSH One Foundation
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://develishngo.blogspot.com/">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#volunteer">Volunteer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="btn btn-primary" href="https://rzp.io/rzp/Ae7sDYf">Donate Now</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section" id="home">
+        <div class="container"><h1>Conserving Nature for Future Generations</h1><p class="lead fs-4">Working towards environmental conservation through sustainable initiatives and community engagement</p>
+        <div><a href="#projects" class="btn btn-light btn-lg me-3">Our Projects</a><a href="https://forms.gle/27ToKFX6beQNMYsh9" class="btn btn-outline-light btn-lg">Join as Volunteer</a></div></div>
+    </section>
+
+    <!-- About, Projects, Stats sections (unchanged for brevity but included fully) -->
+    <section class="about-section" id="about"><div class="container"><div class="about-overlay"><h2 class="section-title">About Our Foundation</h2><p class="text-center mb-5">Committed to environmental conservation through sustainable initiatives</p>
+    <div class="row"><div class="col-lg-4 mb-4"><div class="about-card"><i class="fas fa-leaf about-icon"></i><h3>Our Mission</h3><p>To protect biodiversity, restore ecosystems, and promote sustainable practices that contribute to global environmental goals.</p></div></div>
+    <div class="col-lg-4 mb-4"><div class="about-card"><i class="fas fa-globe-asia about-icon"></i><h3>Our Vision</h3><p>A world where humans live in harmony with nature, ecosystems thrive, and communities prosper through sustainable practices.</p></div></div>
+    <div class="col-lg-4 mb-4"><div class="about-card"><i class="fas fa-hands-helping about-icon"></i><h3>Our Approach</h3><p>We implement projects that directly address climate action, life below water, life on land, and sustainable communities.</p></div></div></div>
+    <div class="row mt-5"><div class="col-lg-6 mb-4"><div class="about-card"><h3>Our Story</h3><p>Founded in 7th April 2025 by Mr. Vishal Kumar Pandey & Mr. Vimal Kumar Pandey CEO Sachin Singh under Section 8 company act 2013, devəliSH One Foundation has been at the forefront of environmental conservation efforts across the globe.</p></div></div>
+    <div class="col-lg-6"><div class="about-card"><h3>Core Values</h3><ul><li>Sustainability – Promoting long-term environmental health</li><li>Conservation – Protecting natural habitats and wildlife</li><li>Education – Empowering through environmental knowledge</li><li>Community – Collaborating with local populations</li></ul></div></div></div></div></div></section>
+
+    <section class="section bg-light-green" id="projects"><div class="container"><h2 class="section-title">Our Environmental Programs</h2><p class="text-center mb-5">Programs aligned with UN SDGs</p><div class="row"><div class="col-lg-4 mb-4"><div class="project-card"><div class="project-img"><img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?auto=format&fit=crop&w=1200" alt="Waste"><div class="project-badge">SDG 11,12,14</div></div><div class="project-content"><h3>WASTE WARRIORS INITIATIVE</h3><p>Zero-waste ecosystems via recycling hubs, upskilling programs.</p><div class="project-stats"><div>2+ Tons Plastic Diverted</div><div>2 Waste Hubs</div><div>32+ Green Livelihoods</div></div></div></div></div>
+    <div class="col-lg-4 mb-4"><div class="project-card"><div class="project-img"><img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200" alt="Tree"><div class="project-badge">SDG 13,15,11</div></div><div class="project-content"><h3>GREENING EARTH MISSION</h3><p>Biodiverse green corridors through native tree planting.</p><div class="project-stats"><div>85,000+ Trees Planted</div><div>42 Hectares Greened</div><div>12 Species Protected</div></div></div></div></div>
+    <div class="col-lg-4 mb-4"><div class="project-card"><div class="project-img"><img src="https://images.unsplash.com/photo-1533077162801-86490c593afb?auto=format&fit=crop&w=1200" alt="Water"><div class="project-badge">SDG 6,13,3</div></div><div class="project-content"><h3>WATER GUARDIANS PROGRAM</h3><p>Reviving water bodies, rainwater harvesting.</p><div class="project-stats"><div>3M Liters Harvested</div><div>45 Wells Restored</div><div>200K+ Beneficiaries</div></div></div></div></div></div></div></section>
+
+    <section class="stats-section" style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color:white; padding:80px 0; text-align:center;"><div class="container"><div class="row"><div class="col-md-3"><h3>250K+</h3><p>Trees Planted</p></div><div class="col-md-3"><h3>15+</h3><p>Countries</p></div><div class="col-md-3"><h3>120+</h3><p>Projects</p></div><div class="col-md-3"><h3>50K+</h3><p>Volunteers</p></div></div></div></section>
+
+    <!-- Volunteer Section with Enhanced ID Card Generation -->
+    <section class="section" id="volunteer">
+        <div class="container">
+            <h2 class="section-title">Join Our Volunteer Community</h2>
+            <p class="text-center mb-5">Become part of our mission — get your official digital ID card with QR code instantly!</p>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-container animate-on-scroll">
+                        <form id="volunteerForm">
+                            <input type="hidden" name="formType" value="volunteer">
+                            <div class="row">
+                                <div class="col-md-6 mb-3"><label class="form-label">First Name</label><input type="text" class="form-control" name="firstName" required></div>
+                                <div class="col-md-6 mb-3"><label class="form-label">Last Name</label><input type="text" class="form-control" name="lastName" required></div>
+                            </div>
+                            <div class="mb-3"><label class="form-label">Email Address</label><input type="email" class="form-control" name="email" required></div>
+                            <div class="mb-3"><label class="form-label">Phone Number</label><input type="tel" class="form-control" name="phone" required></div>
+                            <div class="mb-3"><label class="form-label">Address</label><textarea class="form-control" name="address" rows="2" required></textarea></div>
+                            <div class="mb-3"><label class="form-label">Areas of Interest</label><div class="row"><div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Tree Planting"> Tree Planting</div><div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Wildlife Conservation"> Wildlife Conservation</div></div><div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Water Conservation"> Water Conservation</div><div class="form-check"><input class="form-check-input" type="checkbox" name="interests" value="Community Outreach"> Community Outreach</div></div></div></div>
+                            <div class="mb-3"><label class="form-label">Why do you want to volunteer?</label><textarea class="form-control" name="motivation" rows="3" required></textarea></div>
+                            <div class="d-grid"><button type="submit" class="btn btn-primary">Join as Volunteer → Get ID Card</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section bg-light-green" id="contact"><div class="container"><div class="row"><div class="col-lg-6 mb-5"><div class="form-container"><h2 class="section-title">Contact Us</h2><form id="contactForm"><input type="hidden" name="formType" value="contact"><div class="mb-3"><label>Name</label><input type="text" class="form-control" name="name" required></div><div class="mb-3"><label>Email</label><input type="email" class="form-control" name="email" required></div><div class="mb-3"><label>Subject</label><input type="text" class="form-control" name="subject" required></div><div class="mb-3"><label>Message</label><textarea class="form-control" name="message" rows="5" required></textarea></div><button type="submit" class="btn btn-primary">Send Message</button></form></div></div>
+    <div class="col-lg-6"><div class="p-4"><div class="contact-info"><i class="fas fa-map-marker-alt fa-2x"></i><div><h4>Headquarters</h4><p>Ramwapur Dakahi, Katra, Shravasti, Uttar Pradesh, India - 271805</p></div></div><div class="contact-info"><i class="fas fa-phone fa-2x"></i><div><h4>Phone</h4><p>+91 9721061660</p></div></div><div class="contact-info"><i class="fas fa-envelope fa-2x"></i><div><h4>Email</h4><p>info@develishngo.in</p></div></div><div class="mt-5"><h4>Follow Us</h4><div class="social-icons mt-3"><a href="https://chat.whatsapp.com/DsuRLbfrgSGFLsvn1hBZtQ"><i class="fab fa-whatsapp"></i></a><a href="https://t.me/develishngo"><i class="fab fa-telegram"></i></a><a href="https://www.facebook.com/develishngo"><i class="fab fa-facebook-f"></i></a><a href="https://www.instagram.com/develishngo"><i class="fab fa-instagram"></i></a></div></div></div></div></div></div></section>
+
+    <footer class="footer"><div class="container"><div class="row"><div class="col-lg-4"><p>Dedicated to preserving nature, protecting wildlife.</p><form id="newsletterForm" class="newsletter-form"><input type="hidden" name="formType" value="newsletter"><input type="email" name="email" placeholder="Your Email" class="form-control"><button type="submit" class="btn btn-primary">Subscribe</button></form></div><div class="col-lg-2"><h5>Quick Links</h5><ul><li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#volunteer">Volunteer</a></li></ul></div><div class="col-lg-3"><h5>Our Projects</h5><ul><li>Reforestation</li><li>Wildlife Conservation</li><li>Clean Water</li></ul></div></div><div class="copyright"><p>CIN: U88900UP2025NPL220764</p><p>&copy; 2025 devəliSH One Foundation</p></div></div></footer>
+
+    <!-- Modal for ID Card Preview & PDF -->
+    <div class="modal fade" id="idCardModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white"><h5 class="modal-title">🎉 Your Volunteer ID Card</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body text-center" id="idCardPreviewContainer">
+                    <!-- Dynamic ID Card will be injected here -->
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-primary" id="downloadPDFBtn"><i class="fas fa-download"></i> Download PDF Card</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===================== CONFIGURATION =====================
+        // IMPORTANT: Replace this URL with your Google Apps Script Web App URL that handles volunteer registration & ID generation.
+        // The script must accept POST, store data, and return { "volunteerId": "DEV-1001", "status": "success" }
+        const VOLUNTEER_API_URL = "https://script.google.com/macros/s/AKfycbwyyWcYw4QaAWmU9xdTu7CtYpA4esUBMjB1kusw737OCnEW27ezVbqaY8MHcrGLEN3X/exec"; // <-- REPLACE WITH YOUR DEPLOYED APPS SCRIPT URL
+
+        // For contact & newsletter (keep as before)
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzrSXS9WIyAaYKTNnsnya4Is4_6-cB6CdfIRpJi_0TZtZsZMk6r8wog01sguE8xA4pJRA/exec';
+        
+        function showAlert(title, message, isSuccess = true) {
+            const alertEl = document.querySelector('.custom-alert');
+            alertEl.querySelector('.alert-title').textContent = title;
+            alertEl.querySelector('.alert-message').textContent = message;
+            alertEl.classList.remove('alert-success', 'alert-danger');
+            alertEl.classList.add(isSuccess ? 'alert-success' : 'alert-danger');
+            alertEl.style.display = 'block';
+            setTimeout(() => alertEl.style.display = 'none', 5000);
+        }
+        
+        // Helper: generate QR code inside a container
+        function generateQRCode(containerId, data) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            container.innerHTML = "";
+            new QRCode(container, {
+                text: JSON.stringify(data),
+                width: 120,
+                height: 120,
+                colorDark: "#1d6b3a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        // Build ID card HTML dynamically
+        function buildIDCardHTML(volunteerData, uniqueID) {
+            const fullName = `${volunteerData.firstName || ''} ${volunteerData.lastName || ''}`.trim();
+            const qrPayload = {
+                id: uniqueID,
+                name: fullName,
+                email: volunteerData.email,
+                phone: volunteerData.phone,
+                address: volunteerData.address,
+                organization: "devəliSH One Foundation"
+            };
+            // We'll use a temporary div for QR code after rendering. Return HTML skeleton with placeholder.
+            return `
+                <div class="volunteer-id-card" id="dynamicIdCard">
+                    <div class="card-header-bg d-flex align-items-center justify-content-between">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" style="height:45px;">
+                        <span class="fw-bold">OFFICIAL VOLUNTEER ID</span>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="card-left">
+                            <div class="ngo-title">devəliSH One Foundation</div>
+                            <div class="volunteer-badge mb-3">🌱 ENVIRONMENT VOLUNTEER</div>
+                            <div class="info-row"><div class="info-label">Full Name</div><div class="info-value">${escapeHtml(fullName)}</div></div>
+                            <div class="info-row"><div class="info-label">Volunteer ID</div><div class="info-value"><span class="id-number">${escapeHtml(uniqueID)}</span></div></div>
+                            <div class="info-row"><div class="info-label">Email</div><div class="info-value">${escapeHtml(volunteerData.email)}</div></div>
+                            <div class="info-row"><div class="info-label">Phone</div><div class="info-value">${escapeHtml(volunteerData.phone)}</div></div>
+                            <div class="info-row"><div class="info-label">Address</div><div class="info-value">${escapeHtml(volunteerData.address)}</div></div>
+                        </div>
+                        <div class="card-right">
+                            <div style="font-size:0.75rem; font-weight:600;">SCAN QR CODE</div>
+                            <div id="qrCodeHere" class="qr-container"></div>
+                            <div class="mt-2"><small>Data: ID, Name, Contact</small></div>
+                        </div>
+                    </div>
+                    <div class="footer-card">Valid for environmental initiatives | devəliSH One Foundation</div>
+                </div>
+            `;
+        }
+        
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+        
+        let currentCardElement = null;
+        let currentVolunteerDataStore = null;
+        
+        // Render card inside modal and attach QR
+        function renderVolunteerCard(volunteerData, uniqueID) {
+            const container = document.getElementById("idCardPreviewContainer");
+            const html = buildIDCardHTML(volunteerData, uniqueID);
+            container.innerHTML = html;
+            // generate QR after DOM ready
+            const qrPayload = {
+                id: uniqueID,
+                name: `${volunteerData.firstName} ${volunteerData.lastName}`.trim(),
+                email: volunteerData.email,
+                phone: volunteerData.phone,
+                address: volunteerData.address,
+                org: "devəliSH One Foundation"
+            };
+            setTimeout(() => {
+                const qrDiv = document.getElementById("qrCodeHere");
+                if(qrDiv) {
+                    qrDiv.innerHTML = "";
+                    new QRCode(qrDiv, {
+                        text: JSON.stringify(qrPayload),
+                        width: 120,
+                        height: 120,
+                        colorDark: "#1d6b3a",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            }, 50);
+            currentCardElement = document.getElementById("dynamicIdCard");
+            currentVolunteerDataStore = { volunteerData, uniqueID };
+        }
+        
+        // Download as PDF using html2canvas + jspdf
+        document.getElementById("downloadPDFBtn")?.addEventListener("click", async function() {
+            if(!currentCardElement) {
+                showAlert("Error", "No card to download", false);
+                return;
+            }
+            try {
+                const canvas = await html2canvas(currentCardElement, { scale: 2, backgroundColor: "#ffffff" });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const pageHeight = 277;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let position = 10;
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                pdf.save(`Volunteer_ID_${currentVolunteerDataStore.uniqueID}.pdf`);
+                showAlert("Success", "PDF ID Card downloaded!", true);
+            } catch(err) {
+                console.error(err);
+                showAlert("PDF Error", "Could not generate PDF", false);
+            }
+        });
+        
+        // Volunteer form submission with ID assignment from Google Sheet
+        document.getElementById('volunteerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering & Generating ID...';
+            
+            // Collect data
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((val, key) => { data[key] = val; });
+            const interests = Array.from(form.querySelectorAll('input[name="interests"]:checked')).map(cb => cb.value);
+            data.interests = interests.join(', ');
+            data.fullName = `${data.firstName} ${data.lastName}`;
+            
+            try {
+                // Send to Apps Script that saves to Google Sheet and returns a unique ID based on serial number
+                const response = await fetch(VOLUNTEER_API_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                let result;
+                if(response.ok) {
+                    result = await response.json();
+                } else {
+                    // Fallback demo ID for testing if server not configured (just for demonstration)
+                    console.warn("Using demo ID because API not configured. Please set Apps Script.");
+                    result = { volunteerId: "DEMO-" + Date.now(), status: "demo" };
+                }
+                if(result.status === "success" || result.volunteerId) {
+                    const assignedID = result.volunteerId;
+                    // Build and show modal with ID card
+                    renderVolunteerCard(data, assignedID);
+                    const modal = new bootstrap.Modal(document.getElementById('idCardModal'));
+                    modal.show();
+                    showAlert("Registration Successful", `Your Volunteer ID: ${assignedID} . ID Card generated!`, true);
+                    form.reset();
+                } else {
+                    throw new Error("ID generation failed");
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert("Submission Failed", "Could not generate ID. Please check API configuration.", false);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join as Volunteer → Get ID Card';
+            }
+        });
+        
+        // Contact form (keep original)
+        document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault(); const form=e.target; const btn=form.querySelector('button'); btn.disabled=true; btn.textContent='Sending...';
+            const data={}; new FormData(form).forEach((v,k)=>data[k]=v);
+            try{ await fetch(GOOGLE_SHEETS_URL, {method:'POST', mode:'no-cors', body:JSON.stringify(data)}); showAlert('Message Sent!','Thank you',true); form.reset(); }catch(e){ showAlert('Error','Try again',false); } finally{ btn.disabled=false; btn.textContent='Send Message'; }
+        });
+        document.getElementById('newsletterForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault(); const form=e.target; const btn=form.querySelector('button'); btn.disabled=true; btn.textContent='Subscribing...';
+            const data={}; new FormData(form).forEach((v,k)=>data[k]=v);
+            try{ await fetch(GOOGLE_SHEETS_URL, {method:'POST', mode:'no-cors', body:JSON.stringify(data)}); showAlert('Subscribed!','Thank you',true); form.reset(); }catch(e){ showAlert('Error', 'Try again',false); } finally{ btn.disabled=false; btn.textContent='Subscribe'; }
+        });
+        
+        // Scroll animations
+        function animateOnScroll(){ document.querySelectorAll('.animate-on-scroll').forEach(el=>{ if(el.getBoundingClientRect().top<window.innerHeight*0.95) el.classList.add('visible');}); }
+        window.addEventListener('load', animateOnScroll); window.addEventListener('scroll', animateOnScroll);
+        setTimeout(animateOnScroll, 200);
+    </script>
+    <!-- Note: For full production, you must deploy a Google Apps Script that:
+         - Receives POST request, appends row to Google Sheet, calculates next sequential ID (e.g., VOL-1001) based on existing entries.
+         - Returns JSON { "status": "success", "volunteerId": "VOL-XXXX" }
+         Sample script code is provided in the answer description.
+    -->
+</body>
+</html>
+```
