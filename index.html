@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #eef2f7; 
+            margin: 0; 
+            padding: 20px; 
+            color: #1e2a3e; 
+        }
+        .navbar { 
+            background: #1e2a3e; 
+            color: white; 
+            padding: 12px 20px; 
+            display: flex; 
+            gap: 20px; 
+            justify-content: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-radius: 60px;
+            max-width: 500px;
+            margin: 0 auto 25px auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .navbar button { 
+            background: transparent; 
+            border: none; 
+            color: #cbd5e1; 
+            padding: 8px 24px; 
+            cursor: pointer; 
+            border-radius: 40px; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        .navbar button.active { 
+            background: #2dd4bf; 
+            color: #0f172a; 
+            box-shadow: 0 2px 8px rgba(45,212,191,0.3);
+        }
+        .navbar button:hover:not(.active) {
+            color: white;
+            background: #334155;
+        }
+        
+        .app-container { 
+            max-width: 880px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 32px 36px; 
+            border-radius: 28px; 
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1); 
+        }
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #0f2b3d;
+            border-left: 5px solid #2dd4bf;
+            padding-left: 18px;
+        }
+        .input-group { 
+            margin-bottom: 22px; 
+        }
+        label { 
+            display: flex; 
+            align-items: center;
+            gap: 8px;
+            font-weight: 600; 
+            margin-bottom: 8px; 
+            font-size: 0.85rem;
+            color: #1e293b;
+            letter-spacing: -0.2px;
+        }
+        .hint-icon {
+            background: #e2e8f0;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            color: #334155;
+            font-weight: 400;
+        }
+        .hint-text {
+            font-size: 0.7rem;
+            font-weight: normal;
+            color: #5b6e8c;
+            margin-left: 6px;
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 12px 14px; 
+            border: 1.5px solid #e2e8f0; 
+            border-radius: 16px; 
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            background: #fefefe;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2dd4bf;
+            box-shadow: 0 0 0 3px rgba(45,212,191,0.2);
+        }
+        .sender-box { 
+            background: #f8fafc; 
+            padding: 18px 20px; 
+            border-radius: 24px; 
+            border: 1px solid #e0f2fe; 
+            margin-bottom: 28px; 
+        }
+        .sender-box label {
+            margin-bottom: 12px;
+            color: #0f3b5c;
+        }
+        .button-row { 
+            display: flex; 
+            gap: 16px; 
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn { 
+            border: none; 
+            padding: 12px 28px; 
+            border-radius: 40px; 
+            color: white; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .btn:hover { 
+            transform: translateY(-2px);
+            filter: brightness(1.02);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+        }
+        .btn-print { background: #2c6e9e; }
+        .btn-pdf { background: #e67e22; }
+        
+        #printArea { 
+            display: none; 
+            width: 210mm; 
+            padding: 15mm 22mm; 
+            background: white; 
+            position: relative; 
+            box-sizing: border-box; 
+            margin: auto;
+            font-size: 11.5px;
+            line-height: 1.5;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .lh-header { 
+            text-align: center; 
+            border-bottom: 2px solid #1e2a3e; 
+            padding-bottom: 8px; 
+            margin-bottom: 18px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2px;
+        }
+        
+        .lh-logo { 
+            max-width: 48px; 
+            height: auto;
+        }
+        
+        .lh-org { 
+            font-size: 18px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin: 0;
+            letter-spacing: 1px;
+            color: #0c4e6e;
+        }
+        
+        .reg-no {
+            font-size: 9px;
+            color: #4b5563;
+            margin-top: 4px;
+        }
+        
+        .doc-meta { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 24px; 
+            font-size: 11px;
+            font-weight: 500;
+            background: #f9fafb;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+        
+        .doc-body { 
+            line-height: 1.65; 
+            text-align: justify; 
+            font-size: 11.5px; 
+            white-space: pre-wrap; 
+            min-height: 280px;
+            margin-bottom: 35px;
+        }
+        
+        .lh-sign { 
+            margin-top: 45px; 
+            margin-bottom: 30px;
+            font-size: 11.5px;
+        }
+        
+        .footer {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 8.5px;
+            text-align: center;
+            color: #4b5563;
+            line-height: 1.45;
+        }
+        
+        .footer-address {
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .footer-contact {
+            font-size: 8px;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            #printArea { 
+                display: block !important;
+                padding: 12mm 18mm;
+                box-shadow: none;
+            }
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 6px 18mm;
+            }
+            .doc-body {
+                margin-bottom: 20px;
+            }
+        }
+        
+        .info-note {
+            background: #eef2ff;
+            border-radius: 20px;
+            padding: 10px 18px;
+            font-size: 0.75rem;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: 4px solid #2dd4bf;
+        }
+        hr {
+            margin: 15px 0;
+            border-color: #eef2f5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar no-print">
+    <button id="btnL" class="active" onclick="changeMode('Letter')">1st Letter</button>
+    <button id="btnA" onclick="changeMode('Application')">2nd Applicant</button>
+</div>
+
+<div class="app-container no-print">
+    <h2 id="title">Develish One Foundation - Letter Generator</h2>
+    <div class="info-note">
+        Instructions: Fill the fields below. The preview updates automatically. Use Print or Download PDF to save your document. No data is saved externally - all content stays private.
+    </div>
+    
+    <div class="sender-box">
+        <label>SENDER DETAILS (Your info) 
+            <span class="hint-icon">i</span>
+            <span class="hint-text">Who is signing this document?</span>
+        </label>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <input type="text" id="senderName" placeholder="e.g., Dr. Anita Verma" style="flex:1;">
+            <input type="text" id="senderPos" placeholder="Position / Role (e.g., Director)" style="flex:1;">
+        </div>
+        <div style="font-size: 11px; color: #5a6e8a; margin-top: 8px;">This name and position will appear in the signature block.</div>
+    </div>
+
+    <div class="input-group">
+        <label>Reference / Application Number <span class="hint-icon">required</span>
+            <span class="hint-text">Unique identifier for your document</span>
+        </label>
+        <input type="text" id="refNo" placeholder="e.g., D1F/LTR/2026/042 or APP/2026/021">
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Example: D1F/2026/001 (Letter) or APP-2026/05 (Application)</div>
+    </div>
+    
+    <div class="input-group">
+        <label>Recipient / To Details <span class="hint-icon">i</span>
+            <span class="hint-text">Name, title, organization, address</span>
+        </label>
+        <textarea id="recipient" rows="2" placeholder="Example: The District Magistrate&#10;Collectorate Office, Shravasti, UP - 271801"></textarea>
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Add full address for formal correspondence.</div>
+    </div>
+    
+    <div class="input-group">
+        <label>Subject Line <span class="hint-icon">clear</span>
+            <span class="hint-text">Concise and descriptive</span>
+        </label>
+        <input type="text" id="subject" placeholder="e.g., Proposal for Community Outreach Program">
+        <div style="font-size: 11px; color: #64748b;">Keep subject short but meaningful (auto underlined in final print).</div>
+    </div>
+    
+    <div class="input-group">
+        <label>Main Content / Matter <span class="hint-icon">required</span>
+            <span class="hint-text">Body of the letter or application</span>
+        </label>
+        <textarea id="matter" rows="8" placeholder="Write the main body here...&#10;&#10;Respected Sir/Madam,&#10;&#10;I am writing to request ...&#10;&#10;Thank you for your consideration."></textarea>
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">The content will be printed exactly as written. Use line breaks for paragraphs.</div>
+    </div>
+
+    <div class="button-row">
+        <button class="btn btn-print" onclick="printDocument()">Print Document</button>
+        <button class="btn btn-pdf" onclick="downloadPDF()">Download as PDF</button>
+    </div>
+    <hr>
+    <div style="text-align: center; font-size: 12px; color: #6c757d; margin-top: 12px;">
+        No external saving - everything stays offline. Ready to print or PDF.
+    </div>
+</div>
+
+<div id="printArea">
+    <div class="lh-header">
+        <div class="logo-container">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" class="lh-logo" alt="Develish Logo">
+            <div class="lh-org">Develish One Foundation</div>
+        </div>
+        <div class="reg-no">Reg No: U88900UP2025NPL220764</div>
+    </div>
+    
+    <div class="doc-meta">
+        <div><strong>Ref/App No:</strong> <span id="pRef"></span></div>
+        <div><strong>Date:</strong> <span id="pDate"></span></div>
+    </div>
+    
+    <div style="margin-bottom:16px; font-weight:500;" id="pTo"></div>
+    
+    <div style="margin-bottom:18px; font-weight:700; text-decoration:underline; font-size:12px;">Subject: <span id="pSub"></span></div>
+    
+    <div class="doc-body" id="pMat"></div>
+    
+    <div class="lh-sign">
+        Sincerely,<br><br><br>
+        <strong id="pSignName"></strong><br>
+        <span id="pSignPos"></span><br>
+        Develish One Foundation
+    </div>
+    
+    <div class="footer">
+        <div class="footer-address">
+            Ramwapur Dakahi, Post Katra, Ikauna, Shravasti, UP-271805
+        </div>
+        <div class="footer-contact">
+            develishngo@zohomail.in | +91 9721061660
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentType = 'Letter';
+    
+    const titleEl = document.getElementById('title');
+    const btnLetter = document.getElementById('btnL');
+    const btnApp = document.getElementById('btnA');
+    
+    function changeMode(type) {
+        currentType = type;
+        if (type === 'Letter') {
+            titleEl.innerHTML = "Develish One Foundation - Official Letter";
+            btnLetter.classList.add('active');
+            btnApp.classList.remove('active');
+            const refInput = document.getElementById('refNo');
+            if (!refInput.value) refInput.placeholder = "e.g., D1F/LTR/2026/089";
+            const subjectHint = document.querySelector('#subject + div');
+            if (subjectHint) subjectHint.innerHTML = "For letter: Use formal subject line (e.g., 'Request for Sponsorship')";
+        } else {
+            titleEl.innerHTML = "Develish One Foundation - Application Form";
+            btnApp.classList.add('active');
+            btnLetter.classList.remove('active');
+            const refInput = document.getElementById('refNo');
+            if (!refInput.value) refInput.placeholder = "e.g., APP/2026/024 / Applicant ID";
+            const subjectHint = document.querySelector('#subject + div');
+            if (subjectHint) subjectHint.innerHTML = "For application: e.g., 'Application for Skill Development Workshop'";
+        }
+        const refLabel = document.querySelector('.input-group label');
+        if (refLabel && refLabel.innerText.includes("Reference")) {
+            if (type === 'Letter') {
+                refLabel.innerHTML = `Reference Number <span class="hint-icon">required</span>
+            <span class="hint-text">Unique letter reference</span>`;
+            } else {
+                refLabel.innerHTML = `Application Number <span class="hint-icon">required</span>
+            <span class="hint-text">Unique ID for applicant</span>`;
+            }
+        }
+        updatePreview();
+    }
+    
+    function updatePreview() {
+        const refVal = document.getElementById('refNo').value.trim() || 'N/A';
+        const subjectVal = document.getElementById('subject').value.trim() || 'No Subject';
+        const recipientRaw = document.getElementById('recipient').value.trim() || 'Concerned Authority';
+        const matterVal = document.getElementById('matter').value.trim() || 'No content provided.';
+        const senderNameVal = document.getElementById('senderName').value.trim() || 'Secretary';
+        const senderPosVal = document.getElementById('senderPos').value.trim() || 'Develish One Foundation';
+        
+        const recipientHtml = "To,<br>" + recipientRaw.replace(/\n/g, '<br>');
+        
+        let displayRef = refVal;
+        document.getElementById('pRef').innerText = displayRef;
+        document.getElementById('pDate').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('pSub').innerText = subjectVal;
+        document.getElementById('pTo').innerHTML = recipientHtml;
+        document.getElementById('pMat').innerText = matterVal;
+        document.getElementById('pSignName').innerText = senderNameVal;
+        document.getElementById('pSignPos').innerText = senderPosVal;
+    }
+    
+    const inputs = ['refNo', 'subject', 'recipient', 'matter', 'senderName', 'senderPos'];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        }
+    });
+    
+    function printDocument() {
+        updatePreview();
+        setTimeout(() => {
+            window.print();
+        }, 120);
+    }
+    
+    function downloadPDF() {
+        updatePreview();
+        const userConfirmed = confirm("To download PDF:\n\nClick OK, then in the print dialog, choose 'Save as PDF' or 'Microsoft Print to PDF' as the destination.\n\nYour document will be generated with the official Develish One Foundation layout.");
+        if (userConfirmed) {
+            setTimeout(() => {
+                window.print();
+            }, 80);
+        }
+    }
+    
+    function addInlineHints() {
+        const recipientField = document.getElementById('recipient');
+        if (recipientField && !recipientField.getAttribute('data-hinted')) {
+            recipientField.setAttribute('placeholder', 'Recipient Name / Designation\nOrganization Name\nFull Postal Address');
+            recipientField.setAttribute('data-hinted', 'true');
+        }
+        const matterField = document.getElementById('matter');
+        if (matterField && !matterField.getAttribute('data-hinted')) {
+            matterField.setAttribute('placeholder', 'Dear Sir/Madam,\n\nI am writing this ' + (currentType === 'Letter' ? 'letter' : 'application') + ' to bring to your kind attention...\n\n[Detailed explanation]\n\nI look forward to your positive response.\n\nYours faithfully,');
+        }
+    }
+    
+    const senderNameField = document.getElementById('senderName');
+    const senderPosField = document.getElementById('senderPos');
+    if (senderNameField && !senderNameField.getAttribute('data-ph')) {
+        senderNameField.setAttribute('placeholder', 'Full name (e.g., Rajesh Kumar)');
+        senderPosField.setAttribute('placeholder', 'Position (e.g., Program Coordinator)');
+    }
+    
+    changeMode('Letter');
+    updatePreview();
+    addInlineHints();
+    
+    const style = document.createElement('style');
+    style.textContent = `@media print { body { visibility: visible; } .no-print, .navbar, .app-container, .info-note, .button-row, hr { display: none !important; } #printArea { display: block !important; visibility: visible !important; margin: 0 auto; } }`;
+    document.head.appendChild(style);
+    
+    const hintMessages = {
+        refNo: "For Letter: Use official ref like D1F/2026/XX. For Application: Use unique ID or APP number.",
+        subject: "Keep it concise but descriptive. Will appear as underlined heading.",
+        recipient: "Include full designation and address for proper mailing format.",
+        matter: "Write complete message. Paragraphs are preserved. Formal tone recommended.",
+        senderName: "Your name as it will appear in the signature block.",
+        senderPos: "Your role/designation in the foundation."
+    };
+    
+    for (const [fieldId, msg] of Object.entries(hintMessages)) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('focus', (e) => {
+                const parentGroup = field.closest('.input-group') || field.closest('.sender-box');
+                if (parentGroup && !parentGroup.querySelector('.dynamic-hint')) {
+                    const hintSpan = document.createElement('div');
+                    hintSpan.className = 'dynamic-hint';
+                    hintSpan.style.fontSize = '10px';
+                    hintSpan.style.color = '#2c7a6e';
+                    hintSpan.style.marginTop = '5px';
+                    hintSpan.style.fontWeight = '400';
+                    hintSpan.innerText = msg;
+                    parentGroup.appendChild(hintSpan);
+                    setTimeout(() => {
+                        if (hintSpan.parentNode) hintSpan.remove();
+                    }, 3500);
+                } else if (parentGroup) {
+                    const existing = parentGroup.querySelector('.dynamic-hint');
+                    if (existing) existing.remove();
+                    const hintSpan = document.createElement('div');
+                    hintSpan.className = 'dynamic-hint';
+                    hintSpan.style.fontSize = '10px';
+                    hintSpan.style.color = '#2c7a6e';
+                    hintSpan.style.marginTop = '5px';
+                    hintSpan.innerText = msg;
+                    parentGroup.appendChild(hintSpan);
+                    setTimeout(() => { if(hintSpan.parentNode) hintSpan.remove(); }, 3500);
+                }
+            });
+        }
+    }
+    
+    const matterParent = document.getElementById('matter')?.parentElement;
+    if (matterParent && !matterParent.querySelector('.extra-note')) {
+        const noteSpan = document.createElement('div');
+        noteSpan.className = 'extra-note';
+        noteSpan.style.fontSize = '10px';
+        noteSpan.style.color = '#5588a7';
+        noteSpan.style.marginTop = '6px';
+        noteSpan.innerHTML = 'Use blank lines to separate paragraphs. The printed version keeps formatting exactly as typed.';
+        matterParent.appendChild(noteSpan);
+    }
+    
+    window.saveToSheet = null;
+</script>
+</body>
+</html>
