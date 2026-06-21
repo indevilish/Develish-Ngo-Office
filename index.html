@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_top">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Develish One Foundation – Letter & Application Generator</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #0c4e6e;
+            --primary-light: #1a6a92;
+            --primary-dark: #08344b;
+            --accent: #2dd4bf;
+            --accent-dark: #14b8a6;
+            --bg: #f0f4f9;
+            --card: #ffffff;
+            --text: #1a293f;
+            --text-light: #4b6a8b;
+            --border: #e2e8f0;
+            --shadow: 0 12px 40px rgba(12, 78, 110, 0.08);
+            --radius: 24px;
+            --radius-sm: 14px;
+            --transition: 0.25s ease;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .brand-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(12, 78, 110, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(45, 212, 191, 0.07);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .brand-header .logo {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-header .brand-text {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-header .brand-text .org-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.3px;
+            line-height: 1.2;
+        }
+        .brand-header .brand-text .org-name span {
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.85rem;
+        }
+        .brand-header .brand-text .org-tagline {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .brand-header .brand-text .org-cin {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+            margin-top: 1px;
+        }
+        .brand-header .badge {
+            background: rgba(45, 212, 191, 0.2);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ===== NAVBAR ===== */
+        .nav-bar {
+            background: var(--card);
+            border-radius: 60px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .nav-bar button {
+            background: transparent;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .nav-bar button:hover {
+            background: #f1f5f9;
+            color: var(--text);
+        }
+        .nav-bar button.active {
+            background: var(--accent);
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+        }
+        .nav-bar .divider {
+            width: 1px;
+            background: var(--border);
+            margin: 4px 6px;
+        }
+        .nav-bar .lang-btn {
+            background: #f1f5f9;
+            color: var(--text-light);
+            font-size: 0.7rem;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+        .nav-bar .lang-btn.active-lang {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ===== MAIN CARD ===== */
+        .main-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 30px 34px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .main-card h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--primary);
+            border-left: 5px solid var(--accent);
+            padding-left: 16px;
+            font-family: inherit;
+        }
+        .info-note {
+            background: #f0f9ff;
+            border-radius: 16px;
+            padding: 10px 18px;
+            font-size: 0.75rem;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 22px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text);
+            margin-bottom: 5px;
+            flex-wrap: wrap;
+            font-family: inherit;
+        }
+        .form-group label .hint {
+            font-weight: 400;
+            font-size: 0.65rem;
+            color: var(--text-light);
+        }
+        .form-group label .hint-icon {
+            background: var(--border);
+            border-radius: 30px;
+            font-size: 0.55rem;
+            padding: 0 8px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.88rem;
+            transition: var(--transition);
+            background: #fbfdff;
+            color: var(--text);
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+            background: #fff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        select[multiple] {
+            height: auto;
+            min-height: 130px;
+            padding: 6px 8px;
+            overflow-y: auto;
+        }
+        select[multiple] option {
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 1px 0;
+        }
+        select[multiple] option:checked {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: 600;
+        }
+        select[multiple] option:hover {
+            background: #eef2f7;
+        }
+
+        .sender-box {
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: 1px solid #e0f2fe;
+            margin-bottom: 20px;
+        }
+        .sender-box label {
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        .row-2 {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .row-2>* {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .date-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .date-row input[type="date"] {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .custom-pos-input {
+            margin-top: 8px;
+            display: none;
+        }
+        .custom-pos-input.show {
+            display: block;
+        }
+        .custom-pos-input .custom-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .custom-pos-input .custom-row>* {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .pos-hint {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        .pos-hint span {
+            background: #eef2ff;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .selected-pos-display {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            padding: 4px 12px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .selected-pos-display strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ===== BUTTONS ===== */
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            filter: brightness(1.04);
+        }
+        .btn-preview {
+            background: #6b4c9a;
+        }
+        .btn-save {
+            background: #0b8f7c;
+        }
+        .btn-print {
+            background: #2c6e9e;
+        }
+        .btn-pdf {
+            background: #d97706;
+        }
+        .btn-close {
+            background: #6b7280;
+        }
+
+        .status-msg {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-align: center;
+            margin: 10px 0 0 0;
+            display: none;
+            font-family: inherit;
+        }
+        .status-msg.success {
+            display: block;
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-msg.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status-msg.loading {
+            display: block;
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        /* ===== PRINT AREA ===== */
+        #printArea {
+            display: none;
+            width: 210mm;
+            padding: 14mm 20mm;
+            background: #fff;
+            margin: auto;
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            font-size: 11.5px;
+            line-height: 1.55;
+            color: #1a293f;
+        }
+        .print-header {
+            text-align: center;
+            border-bottom: 2px solid #1e2a3e;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .print-header .logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .print-header .logo-wrap img {
+            max-width: 48px;
+            height: auto;
+        }
+        .print-header .logo-wrap .org {
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #0c4e6e;
+        }
+        .print-header .cin {
+            font-size: 9px;
+            color: #4b5563;
+            margin-top: 2px;
+        }
+        .print-meta {
+            display: flex;
+            justify-content: space-between;
+            background: #f9fafb;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            font-size: 11px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .print-to {
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .print-subject {
+            font-weight: 700;
+            text-decoration: underline;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+        .print-body {
+            line-height: 1.7;
+            text-align: justify;
+            font-size: 11.5px;
+            white-space: pre-wrap;
+            min-height: 180px;
+            margin-bottom: 28px;
+        }
+        .print-sign {
+            margin-top: 36px;
+            margin-bottom: 24px;
+        }
+        .print-footer {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 8.5px;
+            text-align: center;
+            color: #4b5563;
+            line-height: 1.45;
+        }
+        .print-footer .addr {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        /* ===== PREVIEW MODAL ===== */
+        .preview-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            padding: 24px;
+            overflow-y: auto;
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-overlay.open {
+            display: flex;
+        }
+        .preview-card {
+            background: #fff;
+            max-width: 820px;
+            width: 100%;
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            max-height: 92vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+        }
+        .preview-card .close-btn {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        .preview-card .close-btn:hover {
+            background: #dc2626;
+        }
+        .preview-body {
+            margin-top: 10px;
+        }
+        .preview-body #printArea {
+            display: block !important;
+            padding: 10mm 16mm;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            width: 100%;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .brand-header {
+                padding: 16px 18px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .brand-header .brand-text .org-name {
+                font-size: 1.1rem;
+            }
+            .brand-header .badge {
+                align-self: flex-start;
+                font-size: 0.6rem;
+                padding: 4px 14px;
+            }
+            .main-card {
+                padding: 18px 16px;
+            }
+            .nav-bar {
+                border-radius: 30px;
+                padding: 4px 8px;
+                gap: 2px;
+            }
+            .nav-bar button {
+                padding: 6px 12px;
+                font-size: 0.65rem;
+            }
+            .row-2 {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .sender-box {
+                padding: 12px 14px;
+            }
+            .button-row .btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 0.7rem;
+                padding: 10px 14px;
+            }
+            .preview-overlay {
+                padding: 12px;
+            }
+            .preview-card {
+                padding: 16px;
+            }
+            .custom-pos-input .custom-row {
+                flex-direction: column;
+            }
+            .date-row {
+                flex-direction: column;
+            }
+            .date-row input[type="date"] {
+                width: 100%;
+            }
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
+            #printArea {
+                display: block !important;
+                padding: 12mm 18mm;
+                box-shadow: none;
+            }
+            .print-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                padding: 6px 18mm;
+            }
+        }
+
+        /* scrollbar for select */
+        select[multiple]::-webkit-scrollbar {
+            width: 6px;
+        }
+        select[multiple]::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+        select[multiple]::-webkit-scrollbar-thumb {
+            background: #c1c7cd;
+            border-radius: 6px;
+        }
+        select[multiple]::-webkit-scrollbar-thumb:hover {
+            background: #a0aab4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="brand-header no-print">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Develish One Foundation" class="logo">
+            <div class="brand-text">
+                <div class="org-name">देवेलिश वन फाउंडेशन <span>| Develish One Foundation</span></div>
+                <div class="org-tagline">🌿 सामाजिक उत्थान एवं ग्रामीण विकास हेतु समर्पित</div>
+                <div class="org-cin">CIN: U88900UP2025NPL220764 | <span id="headerDate">रजि. 2025</span></div>
+            </div>
+            <div class="badge" id="headerBadge">📄 पत्र / Letter</div>
+        </header>
+
+        <!-- ===== NAV ===== -->
+        <nav class="nav-bar no-print">
+            <button id="btnL" class="active" onclick="changeMode('Letter')">📄 1st Letter</button>
+            <button id="btnA" onclick="changeMode('Application')">📋 2nd Applicant</button>
+            <span class="divider"></span>
+            <button id="langHi" class="lang-btn active-lang" onclick="setLanguage('hi')">🇮🇳 हिंदी</button>
+            <button id="langEn" class="lang-btn" onclick="setLanguage('en')">🇬🇧 English</button>
+        </nav>
+
+        <!-- ===== MAIN ===== -->
+        <div class="main-card no-print">
+            <h2 id="pageTitle">देवेलिश वन फाउंडेशन – पत्र जनरेटर</h2>
+            <div class="info-note" id="infoNote">
+                💡 नीचे दिए गए फ़ील्ड भरें। प्रीव्यू लाइव अपडेट होता है। <strong>शीट में सेव करें</strong> से डेटा स्टोर करें, <strong>प्रीव्यू</strong> से अंतिम दस्तावेज़ देखें, या <strong>प्रिंट/PDF</strong> से निर्यात करें।
+            </div>
+
+            <!-- SENDER -->
+            <div class="sender-box">
+                <label id="lblSender">👤 प्रेषक विवरण <span class="hint-icon">i</span> <span class="hint" id="hintSender">कौन हस्ताक्षर कर रहा है?</span></label>
+                <div class="row-2">
+                    <input type="text" id="senderName" placeholder="पूरा नाम (जैसे, राजेश कुमार)">
+                    <div>
+                        <select id="senderPosSelect" multiple onchange="onPositionChange()"></select>
+                        <div class="pos-hint"><span>Ctrl+Click</span> या <span>Cmd+Click</span> से एक से अधिक पद चुनें</div>
+                        <div class="custom-pos-input" id="customPosWrap">
+                            <div class="custom-row">
+                                <input type="text" id="senderPosCustomName" placeholder="कस्टम पद का नाम" oninput="onPositionChange()">
+                                <input type="text" id="senderPosCustomCode" placeholder="कोड (जैसे, CC)" style="flex:0.6;min-width:100px;" oninput="onPositionChange()">
+                            </div>
+                        </div>
+                        <div class="selected-pos-display" id="selectedPosDisplay">चयनित पद: <strong id="selectedPosList">कोई नहीं</strong></div>
+                    </div>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-light);margin-top:6px;" id="senderHint">नाम और पद हस्ताक्षर ब्लॉक में दिखाई देंगे।</div>
+            </div>
+
+            <!-- DATE + REF -->
+            <div class="form-group">
+                <label id="lblDateRef">📅 दस्तावेज़ दिनांक और संदर्भ</label>
+                <div class="date-row">
+                    <input type="date" id="docDate" onchange="updateRefNumber()">
+                    <input type="text" id="refNo" placeholder="D1F/LTR/2026/001" oninput="onRefManualInput()">
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-light);margin-top:4px;" id="refHint">संदर्भ संख्या स्वतः जनरेट होती है। कृपया अंतिम क्रमांक (serial) भरें।</div>
+            </div>
+
+            <!-- RECIPIENT -->
+            <div class="form-group">
+                <label id="lblRecipient">📬 प्राप्तकर्ता / को <span class="hint-icon">i</span> <span class="hint" id="hintRecip">नाम, पद, संगठन, पता</span></label>
+                <textarea id="recipient" rows="2" placeholder="प्राप्तकर्ता का नाम / पद&#10;संगठन का नाम&#10;पूरा डाक पता"></textarea>
+            </div>
+
+            <!-- SUBJECT -->
+            <div class="form-group">
+                <label id="lblSubject">📌 विषय <span class="hint-icon">clear</span> <span class="hint" id="hintSubj">संक्षिप्त एवं वर्णनात्मक</span></label>
+                <input type="text" id="subject" placeholder="जैसे, सामुदायिक आउटरीच कार्यक्रम हेतु प्रस्ताव">
+            </div>
+
+            <!-- MATTER -->
+            <div class="form-group">
+                <label id="lblMatter">📝 मुख्य सामग्री <span class="hint-icon">required</span> <span class="hint" id="hintMatter">पत्र/आवेदन का मुख्य भाग</span></label>
+                <textarea id="matter" rows="8" placeholder="मुख्य सामग्री यहाँ लिखें...&#10;&#10;माननीय महोदय/महोदया,&#10;&#10;मैं अनुरोध कर रहा/रही हूँ..."></textarea>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="button-row">
+                <button class="btn btn-preview" onclick="openPreview()">👁️ प्रीव्यू</button>
+                <button class="btn btn-save" onclick="saveToSheet()">💾 शीट में सेव करें</button>
+                <button class="btn btn-print" onclick="printDocument()">🖨️ प्रिंट</button>
+                <button class="btn btn-pdf" onclick="downloadPDF()">📄 PDF डाउनलोड</button>
+            </div>
+            <div id="saveStatus" class="status-msg"></div>
+            <hr>
+            <div class="footer-note" id="footerNote">सभी डेटा निजी रहता है। Google Sheets में सहेजा जाता है (यदि कॉन्फ़िगर किया गया हो)।</div>
+        </div>
+
+        <!-- ===== PRINT AREA ===== -->
+        <div id="printArea">
+            <div class="print-header">
+                <div class="logo-wrap">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+                    <div class="org" id="orgNamePrint">देवेलिश वन फाउंडेशन</div>
+                </div>
+                <div class="cin">CIN: U88900UP2025NPL220764</div>
+            </div>
+
+            <div class="print-meta">
+                <div><strong id="refLabelPrint">संदर्भ संख्या:</strong> <span id="pRef"></span></div>
+                <div><strong id="dateLabelPrint">दिनांक:</strong> <span id="pDate"></span></div>
+            </div>
+
+            <div class="print-to" id="pTo"></div>
+            <div class="print-subject"><span id="pSubLabel">विषय:</span> <span id="pSub"></span></div>
+
+            <div class="print-body" id="pMat"></div>
+
+            <div class="print-sign" id="signBlock">
+                <span id="signSincerely">भवदीय,</span><br><br><br>
+                <strong id="pSignName"></strong><br>
+                <span id="pSignPos"></span><br>
+                <span id="pOrgLine">देवेलिश वन फाउंडेशन</span>
+            </div>
+
+            <div class="print-footer">
+                <div class="addr">C/o Bharat Lal, Ramva Pur, Katra, Shrawasti, Shravasti, Ikauna, Shrawasti- 271805, Uttar Pradesh</div>
+                <div>www.develishngo.in | develishngo@gmail.com, develishngo@zohomail.in | +91 9721061660, 9984839190, 9628591501</div>
+            </div>
+        </div>
+
+        <!-- ===== PREVIEW MODAL ===== -->
+        <div class="preview-overlay" id="previewOverlay" onclick="if(event.target===this)closePreview()">
+            <div class="preview-card">
+                <button class="close-btn" onclick="closePreview()">✕</button>
+                <div class="preview-body" id="previewBody"></div>
+                <div style="text-align:center;margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                    <button class="btn btn-print" onclick="printDocument();closePreview();">🖨️ प्रिंट</button>
+                    <button class="btn btn-pdf" onclick="downloadPDF();closePreview();">📄 PDF</button>
+                    <button class="btn btn-save" onclick="saveToSheet();closePreview();">💾 सेव करें</button>
+                    <button class="btn btn-close" onclick="closePreview()">✖ बंद करें</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  CONFIG
+        // ============================================================
+        const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyXBmp_uS-h6k3RB-EcV7-dBIKwGurQxkidrNla3HoVbASDaWkDLVy5jto3ukH5L7T9/exec';
+
+        // ============================================================
+        //  POSITION DATA — with Hindi/English names & unique codes
+        // ============================================================
+        const POSITION_LIST = [
+            // National Level
+            { key: 'president', hi: 'अध्यक्ष', en: 'President', code: 'PR', rank: 1 },
+            { key: 'vice_president', hi: 'उपाध्यक्ष', en: 'Vice President', code: 'VP', rank: 2 },
+            { key: 'secretary', hi: 'सचिव', en: 'Secretary', code: 'SE', rank: 3 },
+            { key: 'treasurer', hi: 'कोषाध्यक्ष', en: 'Treasurer', code: 'TR', rank: 4 },
+            { key: 'executive_director', hi: 'कार्यकारी निदेशक', en: 'Executive Director', code: 'ED', rank: 5 },
+            { key: 'director', hi: 'निदेशक', en: 'Director', code: 'DI', rank: 6 },
+            { key: 'joint_secretary', hi: 'संयुक्त सचिव', en: 'Joint Secretary', code: 'JS', rank: 7 },
+            { key: 'national_organizing_head', hi: 'राष्ट्रीय संगठन प्रभारी', en: 'National Organizing Head', code: 'NO',
+                rank: 8 },
+            { key: 'org_management_committee', hi: 'संगठनात्मक प्रबंधन समिति', en: 'Org Management Committee', code: 'OM',
+                rank: 9 },
+            { key: 'media_pr_head', hi: 'प्रचार एवं मीडिया प्रभारी', en: 'Media & PR Head', code: 'MP', rank: 10 },
+            { key: 'women_empowerment_head', hi: 'महिला सशक्तिकरण प्रभारी', en: 'Women Empowerment Head', code: 'WE',
+                rank: 11 },
+            { key: 'youth_coordinator', hi: 'युवा समन्वयक', en: 'Youth Coordinator', code: 'YC', rank: 12 },
+            // State Level
+            { key: 'state_president', hi: 'राज्य अध्यक्ष', en: 'State President', code: 'SP', rank: 13 },
+            { key: 'state_secretary', hi: 'राज्य सचिव', en: 'State Secretary', code: 'SS', rank: 14 },
+            { key: 'state_treasurer', hi: 'राज्य कोषाध्यक्ष', en: 'State Treasurer', code: 'ST', rank: 15 },
+            { key: 'state_program_coordinator', hi: 'राज्य कार्यक्रम समन्वयक', en: 'State Program Coordinator', code: 'SC',
+                rank: 16 },
+            // Divisional
+            { key: 'divisional_coordinator', hi: 'संभागीय समन्वयक', en: 'Divisional Coordinator', code: 'DC', rank: 17 },
+            { key: 'co_coordinator', hi: 'सह-समन्वयक', en: 'Co-Coordinator', code: 'CC', rank: 18 },
+            // District
+            { key: 'district_president', hi: 'जिलाध्यक्ष', en: 'District President', code: 'DP', rank: 19 },
+            { key: 'district_secretary', hi: 'जिला सचिव', en: 'District Secretary', code: 'DS', rank: 20 },
+            { key: 'district_treasurer', hi: 'जिला कोषाध्यक्ष', en: 'District Treasurer', code: 'DT', rank: 21 },
+            { key: 'district_project_manager', hi: 'जिला परियोजना प्रबंधक', en: 'District Project Manager', code: 'DM',
+                rank: 22 },
+            // Block
+            { key: 'block_coordinator', hi: 'ब्लॉक समन्वयक', en: 'Block Coordinator', code: 'BC', rank: 23 },
+            { key: 'block_women_representative', hi: 'ब्लॉक महिला प्रतिनिधि', en: 'Block Women Representative', code: 'BW',
+                rank: 24 },
+            // Village
+            { key: 'village_volunteer', hi: 'ग्राम स्वयंसेवक', en: 'Village Volunteer', code: 'VV', rank: 25 },
+            { key: 'village_volunteer_lead', hi: 'ग्राम स्वयंसेवक प्रमुख', en: 'Village Volunteer Lead', code: 'VL',
+                rank: 26 }
+        ];
+
+        // Build lookups
+        const POS_BY_KEY = {};
+        const POS_RANK = {};
+        const POS_CODE = {};
+        const POS_NAME = {};
+        POSITION_LIST.forEach(p => {
+            POS_BY_KEY[p.key] = p;
+            POS_RANK[p.key] = p.rank;
+            POS_CODE[p.key] = p.code;
+            POS_NAME[p.key] = { hi: p.hi, en: p.en };
+        });
+
+        // Level groups for optgroup
+        const LEVEL_GROUPS = {
+            'National Level': ['president', 'vice_president', 'secretary', 'treasurer', 'executive_director', 'director',
+                'joint_secretary', 'national_organizing_head', 'org_management_committee', 'media_pr_head',
+                'women_empowerment_head', 'youth_coordinator'
+            ],
+            'State Level': ['state_president', 'state_secretary', 'state_treasurer', 'state_program_coordinator'],
+            'Divisional Level': ['divisional_coordinator', 'co_coordinator'],
+            'District Level': ['district_president', 'district_secretary', 'district_treasurer',
+                'district_project_manager'],
+            'Block Level': ['block_coordinator', 'block_women_representative'],
+            'Village Level': ['village_volunteer', 'village_volunteer_lead']
+        };
+
+        // ============================================================
+        //  LANGUAGE STRINGS
+        // ============================================================
+        const LANG = {
+            hi: {
+                titleLetter: 'देवेलिश वन फाउंडेशन – पत्र जनरेटर',
+                titleApp: 'देवेलिश वन फाउंडेशन – आवेदन पत्र',
+                infoNote: '💡 नीचे दिए गए फ़ील्ड भरें। प्रीव्यू लाइव अपडेट होता है। <strong>शीट में सेव करें</strong> से डेटा स्टोर करें, <strong>प्रीव्यू</strong> से अंतिम दस्तावेज़ देखें, या <strong>प्रिंट/PDF</strong> से निर्यात करें।',
+                lblSender: '👤 प्रेषक विवरण',
+                hintSender: 'कौन हस्ताक्षर कर रहा है?',
+                senderHint: 'नाम और पद हस्ताक्षर ब्लॉक में दिखाई देंगे।',
+                lblDateRef: '📅 दस्तावेज़ दिनांक और संदर्भ',
+                refHint: 'संदर्भ संख्या स्वतः जनरेट होती है। कृपया अंतिम क्रमांक (serial) भरें।',
+                lblRecipient: '📬 प्राप्तकर्ता / को',
+                hintRecip: 'नाम, पद, संगठन, पता',
+                lblSubject: '📌 विषय',
+                hintSubj: 'संक्षिप्त एवं वर्णनात्मक',
+                lblMatter: '📝 मुख्य सामग्री',
+                hintMatter: 'पत्र/आवेदन का मुख्य भाग',
+                footerNote: 'सभी डेटा निजी रहता है। Google Sheets में सहेजा जाता है (यदि कॉन्फ़िगर किया गया हो)।',
+                refLabel: 'संदर्भ संख्या:',
+                dateLabel: 'दिनांक:',
+                subLabel: 'विषय:',
+                sincerely: 'भवदीय,',
+                orgLine: 'देवेलिश वन फाउंडेशन',
+                saveSuccess: '✅ डेटा सफलतापूर्वक Google Sheets में सहेजा गया!',
+                saveError: '❌ सहेजने में त्रुटि। कृपया URL कॉन्फ़िगरेशन जाँचें।',
+                saveLoading: '⏳ सहेजा जा रहा है... कृपया प्रतीक्षा करें।',
+                posPlaceholder: '— पद चुनें (Ctrl+Click) —',
+                refPlaceholderLetter: 'D1F/LTR/2026/001',
+                refPlaceholderApp: 'D1F/APP/2026/001',
+                subjectPlaceholder: 'जैसे, सामुदायिक आउटरीच कार्यक्रम हेतु प्रस्ताव',
+                matterPlaceholder: 'मुख्य सामग्री यहाँ लिखें...\n\nमाननीय महोदय/महोदया,\n\nमैं अनुरोध कर रहा/रही हूँ...',
+                recipientPlaceholder: 'प्राप्तकर्ता का नाम / पद\nसंगठन का नाम\nपूरा डाक पता',
+                senderNamePlaceholder: 'पूरा नाम (जैसे, राजेश कुमार)',
+                customPosNamePlaceholder: 'कस्टम पद का नाम (जैसे, मुख्य समन्वयक)',
+                customPosCodePlaceholder: 'कोड (जैसे, CC)',
+                badgeLetter: '📄 पत्र / Letter',
+                badgeApp: '📋 आवेदन / Application',
+                noPosSelected: 'कोई नहीं',
+                toPrefix: 'प्रति,',
+                signMember: 'सदस्य',
+            },
+            en: {
+                titleLetter: 'Develish One Foundation – Letter Generator',
+                titleApp: 'Develish One Foundation – Application Generator',
+                infoNote: '💡 Fill the fields below. Preview updates live. Use <strong>Save to Sheet</strong> to store data, <strong>Preview</strong> to see final document, or <strong>Print/PDF</strong> to export.',
+                lblSender: '👤 SENDER DETAILS',
+                hintSender: 'Who is signing?',
+                senderHint: 'Name and position appear in signature block.',
+                lblDateRef: '📅 Document Date & Reference',
+                refHint: 'Reference number auto-generated. Please fill the final serial number.',
+                lblRecipient: '📬 To / Recipient',
+                hintRecip: 'Name, title, org, address',
+                lblSubject: '📌 Subject',
+                hintSubj: 'Concise & descriptive',
+                lblMatter: '📝 Main Content',
+                hintMatter: 'Body of letter/application',
+                footerNote: 'All data stays private. Saved to Google Sheets (if configured).',
+                refLabel: 'Ref No:',
+                dateLabel: 'Date:',
+                subLabel: 'Subject:',
+                sincerely: 'Sincerely,',
+                orgLine: 'Develish One Foundation',
+                saveSuccess: '✅ Data saved to Google Sheets successfully!',
+                saveError: '❌ Error saving. Please check URL configuration.',
+                saveLoading: '⏳ Saving... Please wait.',
+                posPlaceholder: '— Select Position(s) (Ctrl+Click) —',
+                refPlaceholderLetter: 'D1F/LTR/2026/001',
+                refPlaceholderApp: 'D1F/APP/2026/001',
+                subjectPlaceholder: 'e.g., Proposal for Community Outreach Program',
+                matterPlaceholder: 'Write the main body here...\n\nRespected Sir/Madam,\n\nI am writing to request ...',
+                recipientPlaceholder: 'Recipient Name / Designation\nOrganization Name\nFull Postal Address',
+                senderNamePlaceholder: 'Full name (e.g., Rajesh Kumar)',
+                customPosNamePlaceholder: 'Custom position name (e.g., Chief Coordinator)',
+                customPosCodePlaceholder: 'Code (e.g., CC)',
+                badgeLetter: '📄 Letter',
+                badgeApp: '📋 Application',
+                noPosSelected: 'None',
+                toPrefix: 'To,',
+                signMember: 'Member',
+            }
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let currentType = 'Letter';
+        let currentLang = 'hi';
+        let manualRefSerial = '';
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        function init() {
+            populatePositions();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('docDate').value = today;
+            document.getElementById('headerDate').textContent = 'रजि. ' + new Date().getFullYear();
+            setLanguage('hi');
+            changeMode('Letter');
+            updatePreview();
+            addEventListeners();
+            updateSelectedPosDisplay();
+            updateRefNumber();
+        }
+
+        // ============================================================
+        //  POPULATE POSITIONS
+        // ============================================================
+        function populatePositions() {
+            const sel = document.getElementById('senderPosSelect');
+            sel.innerHTML = '';
+            const t = LANG[currentLang];
+            const placeholder = t.posPlaceholder;
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = placeholder;
+            opt.disabled = true;
+            opt.selected = true;
+            sel.appendChild(opt);
+
+            for (const [level, keys] of Object.entries(LEVEL_GROUPS)) {
+                const grp = document.createElement('optgroup');
+                grp.label = level;
+                keys.forEach(key => {
+                    const pos = POS_BY_KEY[key];
+                    if (!pos) return;
+                    const o = document.createElement('option');
+                    o.value = key;
+                    o.textContent = currentLang === 'hi' ? pos.hi : pos.en;
+                    grp.appendChild(o);
+                });
+                sel.appendChild(grp);
+            }
+
+            const customOpt = document.createElement('option');
+            customOpt.value = '__CUSTOM__';
+            customOpt.textContent = currentLang === 'hi' ? '✏️ कस्टम पद (Custom)...' : '✏️ Custom position...';
+            sel.appendChild(customOpt);
+
+            sel.addEventListener('change', function() {
+                onPositionChange();
+            });
+        }
+
+        // ============================================================
+        //  POSITION HELPERS
+        // ============================================================
+        function onPositionChange() {
+            toggleCustomPos();
+            updateSelectedPosDisplay();
+            updateRefNumber();
+            updatePreview();
+        }
+
+        function toggleCustomPos() {
+            const sel = document.getElementById('senderPosSelect');
+            const wrap = document.getElementById('customPosWrap');
+            const selected = Array.from(sel.selectedOptions).map(o => o.value);
+            if (selected.includes('__CUSTOM__')) {
+                wrap.classList.add('show');
+            } else {
+                wrap.classList.remove('show');
+                document.getElementById('senderPosCustomName').value = '';
+                document.getElementById('senderPosCustomCode').value = '';
+            }
+            updateSelectedPosDisplay();
+        }
+
+        function updateSelectedPosDisplay() {
+            const sel = document.getElementById('senderPosSelect');
+            const display = document.getElementById('selectedPosList');
+            const keys = Array.from(sel.selectedOptions)
+                .filter(o => o.value && o.value !== '__CUSTOM__')
+                .map(o => o.value);
+
+            let names = keys.map(key => {
+                const pos = POS_BY_KEY[key];
+                return pos ? (currentLang === 'hi' ? pos.hi : pos.en) : key;
+            });
+
+            const cName = document.getElementById('senderPosCustomName').value.trim();
+            const cCode = document.getElementById('senderPosCustomCode').value.trim();
+            if (cName) {
+                names.push(cName + (cCode ? ` (${cCode})` : ''));
+            }
+
+            const t = LANG[currentLang];
+            display.textContent = names.length ? names.join(' | ') : t.noPosSelected;
+        }
+
+        function getAllSelectedPositions() {
+            const sel = document.getElementById('senderPosSelect');
+            const keys = Array.from(sel.selectedOptions)
+                .filter(o => o.value && o.value !== '__CUSTOM__')
+                .map(o => o.value);
+            const positions = keys.map(k => POS_BY_KEY[k]).filter(Boolean);
+
+            const cName = document.getElementById('senderPosCustomName').value.trim();
+            const cCode = document.getElementById('senderPosCustomCode').value.trim();
+            if (cName) {
+                positions.push({
+                    key: 'custom_' + Date.now(),
+                    hi: cName,
+                    en: cName,
+                    code: cCode || 'CUS',
+                    rank: 999
+                });
+            }
+            return positions;
+        }
+
+        function getHighestRankedPosition() {
+            const all = getAllSelectedPositions();
+            if (!all.length) return null;
+            all.sort((a, b) => a.rank - b.rank);
+            return all[0];
+        }
+
+        function getSenderPositionDisplay() {
+            const all = getAllSelectedPositions();
+            if (!all.length) return '';
+            return all.map(p => currentLang === 'hi' ? p.hi : p.en).join(' | ');
+        }
+
+        // ============================================================
+        //  REFERENCE NUMBER
+        // ============================================================
+        function updateRefNumber() {
+            const refInput = document.getElementById('refNo');
+            const dateInput = document.getElementById('docDate');
+            const highest = getHighestRankedPosition();
+            const year = dateInput.value ? new Date(dateInput.value).getFullYear() : new Date().getFullYear();
+            const typeCode = currentType === 'Letter' ? 'LTR' : 'APP';
+
+            let posCode = 'GEN';
+            if (highest && highest.code) {
+                posCode = highest.code;
+            }
+
+            const prefix = `D1F/${typeCode}/${posCode}/${year}/`;
+
+            // Try to preserve serial number
+            let serial = '';
+            const currentVal = refInput.value;
+            if (currentVal.startsWith('D1F/')) {
+                const parts = currentVal.split('/');
+                if (parts.length >= 5) {
+                    const last = parts[parts.length - 1];
+                    if (last && /^\d+$/.test(last)) {
+                        serial = last;
+                    }
+                }
+            }
+
+            if (serial) {
+                refInput.value = prefix + serial;
+            } else {
+                // Set placeholder and value only if empty or not matching format
+                refInput.placeholder = prefix + '001';
+                if (!refInput.value.startsWith('D1F/')) {
+                    refInput.value = prefix;
+                } else {
+                    // If it starts with D1F/ but we couldn't extract serial, update prefix
+                    const parts = refInput.value.split('/');
+                    if (parts.length >= 4) {
+                        // Keep the last part if it looks like a serial
+                        const last = parts[parts.length - 1];
+                        if (/^\d+$/.test(last)) {
+                            refInput.value = prefix + last;
+                        } else {
+                            refInput.value = prefix;
+                        }
+                    } else {
+                        refInput.value = prefix;
+                    }
+                }
+            }
+
+            const hint = document.getElementById('refHint');
+            if (hint) {
+                hint.textContent = currentLang === 'hi' ?
+                    `संदर्भ संख्या स्वतः जनरेट होती है। कृपया अंतिम क्रमांक (serial) भरें। उदा: ${prefix}001` :
+                    `Reference number auto-generated. Please fill the final serial number. E.g.: ${prefix}001`;
+            }
+        }
+
+        function onRefManualInput() {
+            const refInput = document.getElementById('refNo');
+            const val = refInput.value;
+            if (val.startsWith('D1F/')) {
+                const parts = val.split('/');
+                if (parts.length >= 5) {
+                    const last = parts[parts.length - 1];
+                    if (/^\d+$/.test(last)) {
+                        manualRefSerial = last;
+                    }
+                }
+            }
+        }
+
+        // ============================================================
+        //  LANGUAGE & MODE
+        // ============================================================
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('langHi').classList.toggle('active-lang', lang === 'hi');
+            document.getElementById('langEn').classList.toggle('active-lang', lang === 'en');
+
+            const t = LANG[lang];
+            const isLetter = currentType === 'Letter';
+
+            document.getElementById('pageTitle').textContent = isLetter ? t.titleLetter : t.titleApp;
+            document.getElementById('infoNote').innerHTML = t.infoNote;
+            document.getElementById('lblSender').innerHTML = t.lblSender + ' <span class="hint-icon">i</span> <span class="hint">' +
+                t.hintSender + '</span>';
+            document.getElementById('senderHint').textContent = t.senderHint;
+            document.getElementById('lblDateRef').textContent = t.lblDateRef;
+            document.getElementById('refHint').textContent = t.refHint;
+            document.getElementById('lblRecipient').innerHTML = t.lblRecipient +
+                ' <span class="hint-icon">i</span> <span class="hint">' + t.hintRecip + '</span>';
+            document.getElementById('lblSubject').innerHTML = t.lblSubject +
+                ' <span class="hint-icon">clear</span> <span class="hint">' + t.hintSubj + '</span>';
+            document.getElementById('lblMatter').innerHTML = t.lblMatter +
+                ' <span class="hint-icon">required</span> <span class="hint">' + t.hintMatter + '</span>';
+            document.getElementById('footerNote').textContent = t.footerNote;
+
+            document.getElementById('senderName').placeholder = t.senderNamePlaceholder;
+            document.getElementById('senderPosCustomName').placeholder = t.customPosNamePlaceholder;
+            document.getElementById('senderPosCustomCode').placeholder = t.customPosCodePlaceholder;
+            document.getElementById('subject').placeholder = t.subjectPlaceholder;
+            document.getElementById('matter').placeholder = t.matterPlaceholder;
+            document.getElementById('recipient').placeholder = t.recipientPlaceholder;
+
+            document.getElementById('refLabelPrint').textContent = t.refLabel;
+            document.getElementById('dateLabelPrint').textContent = t.dateLabel;
+            document.getElementById('pSubLabel').textContent = t.subLabel + ' ';
+            document.getElementById('signSincerely').textContent = t.sincerely;
+            document.getElementById('pOrgLine').textContent = t.orgLine;
+
+            document.getElementById('headerBadge').textContent = isLetter ? t.badgeLetter : t.badgeApp;
+            document.getElementById('orgNamePrint').textContent = lang === 'hi' ? 'देवेलिश वन फाउंडेशन' :
+                'Develish One Foundation';
+
+            const refInput = document.getElementById('refNo');
+            refInput.placeholder = isLetter ? t.refPlaceholderLetter : t.refPlaceholderApp;
+
+            populatePositions();
+            updateSelectedPosDisplay();
+            updateRefNumber();
+            updatePreview();
+        }
+
+        function changeMode(type) {
+            currentType = type;
+            const t = LANG[currentLang];
+            document.getElementById('btnL').classList.toggle('active', type === 'Letter');
+            document.getElementById('btnA').classList.toggle('active', type === 'Application');
+            document.getElementById('pageTitle').textContent = type === 'Letter' ? t.titleLetter : t.titleApp;
+            document.getElementById('headerBadge').textContent = type === 'Letter' ? t.badgeLetter : t.badgeApp;
+
+            const refInput = document.getElementById('refNo');
+            refInput.placeholder = type === 'Letter' ? t.refPlaceholderLetter : t.refPlaceholderApp;
+
+            const subjHint = document.querySelector('#subject + div');
+            if (subjHint) {
+                subjHint.textContent = type === 'Letter' ?
+                    (currentLang === 'hi' ? 'पत्र के लिए: औपचारिक विषय पंक्ति' :
+                        'For letter: Use formal subject line') :
+                    (currentLang === 'hi' ? 'आवेदन के लिए: विषय स्पष्ट लिखें' :
+                        'For application: Write clear subject');
+            }
+            updateRefNumber();
+            updatePreview();
+        }
+
+        // ============================================================
+        //  PREVIEW
+        // ============================================================
+        function updatePreview() {
+            const t = LANG[currentLang];
+            const refVal = document.getElementById('refNo').value.trim() || 'N/A';
+            const subjVal = document.getElementById('subject').value.trim() || (currentLang === 'hi' ? 'कोई विषय नहीं' :
+                'No Subject');
+            const recipRaw = document.getElementById('recipient').value.trim() || (currentLang === 'hi' ?
+                'संबंधित प्राधिकारी' : 'Concerned Authority');
+            const matterVal = document.getElementById('matter').value.trim() || (currentLang === 'hi' ?
+                'कोई सामग्री नहीं।' : 'No content.');
+            const senderName = document.getElementById('senderName').value.trim() || (currentLang === 'hi' ? 'सचिव' :
+                'Secretary');
+
+            // Get position display - if empty, use member/blank
+            let posDisplay = getSenderPositionDisplay();
+            if (!posDisplay) {
+                posDisplay = currentLang === 'hi' ? 'सदस्य' : 'Member';
+            }
+
+            const dateVal = document.getElementById('docDate').value;
+            const displayDate = dateVal ? new Date(dateVal).toLocaleDateString(
+                currentLang === 'hi' ? 'hi-IN' : 'en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }
+            ) : new Date().toLocaleDateString(
+                currentLang === 'hi' ? 'hi-IN' : 'en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }
+            );
+
+            const toPrefix = currentLang === 'hi' ? 'प्रति,' : 'To,';
+            const toHtml = toPrefix + '<br>' + recipRaw.replace(/\n/g, '<br>');
+
+            document.getElementById('pRef').textContent = refVal;
+            document.getElementById('pDate').textContent = displayDate;
+            document.getElementById('pSub').textContent = subjVal;
+            document.getElementById('pTo').innerHTML = toHtml;
+            document.getElementById('pMat').textContent = matterVal;
+            document.getElementById('pSignName').textContent = senderName;
+            document.getElementById('pSignPos').textContent = posDisplay;
+            // pOrgLine already set in language
+
+            // Update org name in print header
+            document.getElementById('orgNamePrint').textContent = currentLang === 'hi' ?
+                'देवेलिश वन फाउंडेशन' : 'Develish One Foundation';
+
+            const overlay = document.getElementById('previewOverlay');
+            if (overlay.classList.contains('open')) {
+                renderPreviewModal();
+            }
+        }
+
+        // ============================================================
+        //  PREVIEW MODAL
+        // ============================================================
+        function openPreview() {
+            renderPreviewModal();
+            document.getElementById('previewOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('previewOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function renderPreviewModal() {
+            const body = document.getElementById('previewBody');
+            const printArea = document.getElementById('printArea');
+            const clone = printArea.cloneNode(true);
+            clone.style.display = 'block';
+            clone.style.width = '100%';
+            clone.style.padding = '10mm 16mm';
+            clone.style.background = '#fff';
+            clone.style.borderRadius = '12px';
+            clone.style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
+            clone.querySelectorAll('[style*="display:none"]').forEach(el => el.style.display = '');
+            body.innerHTML = '';
+            body.appendChild(clone);
+        }
+
+        // ============================================================
+        //  PRINT & PDF
+        // ============================================================
+        function printDocument() {
+            updatePreview();
+            setTimeout(() => window.print(), 150);
+        }
+
+        function downloadPDF() {
+            updatePreview();
+            const msg = currentLang === 'hi' ?
+                'PDF डाउनलोड करने के लिए:\n\nOK दबाएँ, फिर प्रिंट डायलॉग में "Save as PDF" चुनें।' :
+                'To download PDF:\n\nClick OK, then choose "Save as PDF" in the print dialog.';
+            if (confirm(msg)) {
+                setTimeout(() => window.print(), 100);
+            }
+        }
+
+        // ============================================================
+        //  SAVE TO SHEETS
+        // ============================================================
+        function saveToSheet() {
+            const status = document.getElementById('saveStatus');
+            const t = LANG[currentLang];
+
+            const data = {
+                docType: currentType,
+                language: currentLang,
+                date: document.getElementById('docDate').value || new Date().toISOString().split('T')[0],
+                senderName: document.getElementById('senderName').value.trim(),
+                senderPosition: getSenderPositionDisplay(),
+                refNo: document.getElementById('refNo').value.trim(),
+                recipient: document.getElementById('recipient').value.trim(),
+                subject: document.getElementById('subject').value.trim(),
+                matter: document.getElementById('matter').value.trim(),
+                timestamp: new Date().toISOString()
+            };
+
+            if (!data.senderName || !data.refNo || !data.subject || !data.matter) {
+                status.className = 'status-msg error';
+                status.textContent = currentLang === 'hi' ?
+                    '❌ कृपया सभी आवश्यक फ़ील्ड भरें: प्रेषक, संदर्भ, विषय, सामग्री।' :
+                    '❌ Please fill all required fields: Sender, Reference, Subject, Content.';
+                status.style.display = 'block';
+                setTimeout(() => { status.style.display = 'none'; }, 4000);
+                return;
+            }
+
+            status.className = 'status-msg loading';
+            status.textContent = t.saveLoading;
+            status.style.display = 'block';
+
+            fetch(GOOGLE_SHEETS_WEBAPP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    status.className = 'status-msg success';
+                    status.textContent = t.saveSuccess;
+                    status.style.display = 'block';
+                    setTimeout(() => { status.style.display = 'none'; }, 4000);
+                })
+                .catch(err => {
+                    status.className = 'status-msg error';
+                    status.textContent = t.saveError + ' ' + (err.message || '');
+                    status.style.display = 'block';
+                    setTimeout(() => { status.style.display = 'none'; }, 5000);
+                });
+        }
+
+        // ============================================================
+        //  EVENTS
+        // ============================================================
+        function addEventListeners() {
+            const ids = ['subject', 'recipient', 'matter', 'senderName', 'senderPosCustomName', 'senderPosCustomCode'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', function() {
+                        if (id === 'senderPosCustomName' || id === 'senderPosCustomCode') {
+                            updateSelectedPosDisplay();
+                            updateRefNumber();
+                        }
+                        updatePreview();
+                    });
+                    el.addEventListener('change', updatePreview);
+                }
+            });
+            document.getElementById('docDate').addEventListener('change', function() {
+                updateRefNumber();
+                updatePreview();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closePreview();
+            });
+        }
+
+        // ============================================================
+        //  START
+        // ============================================================
+        init();
+
+        // Expose
+        window.changeMode = changeMode;
+        window.setLanguage = setLanguage;
+        window.updatePreview = updatePreview;
+        window.openPreview = openPreview;
+        window.closePreview = closePreview;
+        window.saveToSheet = saveToSheet;
+        window.printDocument = printDocument;
+        window.downloadPDF = downloadPDF;
+        window.onPositionChange = onPositionChange;
+        window.updateRefNumber = updateRefNumber;
+        window.onRefManualInput = onRefManualInput;
+
+        console.log('✅ Develish One Foundation – Letter & Application System');
+        console.log('📌 Configure GOOGLE_SHEETS_WEBAPP_URL at the top.');
+        console.log('📌 Position codes: PR, VP, SE, TR, ED, DI, JS, NO, OM, MP, WE, YC, SP, SS, ST, SC, DC, CC, DP, DS, DT, DM, BC, BW, VV, VL');
+    </script>
+
+</body>
+</html>
