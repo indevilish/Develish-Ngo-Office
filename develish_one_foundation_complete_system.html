@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEVELISH ONE FOUNDATION - System & Roster Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #002B49;
+            --navy-header: #0d233a;
+            --accent-gold: #fbbf24;
+            --step-1: #1a365d;
+            --step-2: #1e5631;
+            --step-3: #c85a17;
+            --step-4: #6b21a8;
+            --step-5: #9f1239;
+            --border-color: #cbd5e1;
+            --bg-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 15px;
+        }
+
+        /* Navigation Bar */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #f1f5f9;
+            padding: 10px 0;
+        }
+
+        .tab-btn {
+            background: #ffffff;
+            border: 2px solid var(--navy-dark);
+            color: var(--navy-dark);
+            padding: 8px 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--navy-dark);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Poster Canvas */
+        .poster-container {
+            display: none;
+            max-width: 1250px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 3px solid var(--navy-dark);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .poster-container.active {
+            display: block;
+        }
+
+        /* Header Layout */
+        .poster-header {
+            background: linear-gradient(135deg, #002B49, #0d233a);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .logo-box {
+            width: 85px;
+            height: 85px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--accent-gold);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-titles {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 15px;
+        }
+
+        .header-titles h1 {
+            font-size: 26px;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .header-titles h2 {
+            font-size: 17px;
+            color: var(--accent-gold);
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        .header-sub-banner {
+            background: #e2e8f0;
+            text-align: center;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            color: var(--navy-dark);
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Steps Layout Grid */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .step-card {
+            border-radius: 6px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .step-header {
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .s1 { background: var(--step-1); }
+        .s2 { background: var(--step-2); }
+        .s3 { background: var(--step-3); }
+        .s4 { background: var(--step-4); }
+        .s5 { background: var(--step-5); }
+
+        .step-body {
+            padding: 10px;
+            font-size: 11px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .step-icon {
+            font-size: 24px;
+            margin: 8px 0;
+            color: var(--navy-dark);
+        }
+
+        .output-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 4px;
+            padding: 5px;
+            text-align: center;
+            margin-top: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* Graphical Flowchart / Diagrams */
+        .graph-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            gap: 6px;
+        }
+
+        .flow-node {
+            background: #ffffff;
+            border: 2px solid var(--navy-dark);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            flex: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .flow-arrow {
+            font-size: 18px;
+            color: var(--navy-dark);
+        }
+
+        /* Tables */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-bottom: 14px;
+        }
+
+        .custom-table th, .custom-table td {
+            border: 1px solid #94a3b8;
+            padding: 7px;
+            text-align: center;
+        }
+
+        .custom-table th {
+            background: var(--navy-dark);
+            color: white;
+            font-size: 12px;
+        }
+
+        .custom-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Footer Banner */
+        .footer-banner {
+            background: var(--navy-dark);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-top: 3px solid var(--accent-gold);
+        }
+
+        /* Grid Utilities */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+        .card {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            background: var(--navy-dark);
+            color: white;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        ul.styled-list {
+            list-style: none;
+            font-size: 11px;
+        }
+
+        ul.styled-list li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 18px;
+            line-height: 1.4;
+        }
+
+        ul.styled-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        /* Roster Grid CSS */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .roster-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-top: 4px solid var(--navy-dark);
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .roster-card h4 {
+            color: var(--navy-dark);
+            font-size: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .month-tag {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .about-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .about-text p {
+            margin-bottom: 10px;
+        }
+
+        .contact-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 11px;
+        }
+
+        .contact-box div {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media print {
+            .nav-tabs { display: none; }
+            .poster-container { display: block !important; page-break-after: always; box-shadow: none; border: 2px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="showPoster(1)"><i class="fa-solid fa-sitemap"></i> 1. कार्यप्रवाह (Work Flow)</button>
+        <button class="tab-btn" onclick="showPoster(2)"><i class="fa-solid fa-chart-pie"></i> 2. रिपोर्टिंग प्रणाली (Reporting System)</button>
+        <button class="tab-btn" onclick="showPoster(3)"><i class="fa-solid fa-indian-rupee-sign"></i> 3. फंड प्रबंधन (Fund Management)</button>
+        <button class="tab-btn" onclick="showPoster(4)"><i class="fa-solid fa-users"></i> 4. बैठक एवं समीक्षा (Meetings & Review)</button>
+        <button class="tab-btn" onclick="showPoster(5)"><i class="fa-solid fa-network-wired"></i> 5. प्रबंधन प्रणाली (Management System)</button>
+        <button class="tab-btn" onclick="showPoster(6)"><i class="fa-solid fa-calendar-days"></i> 6. 365-दिन टास्क रोस्टर (365-Day Roster)</button>
+        <button class="tab-btn" onclick="showPoster(7)"><i class="fa-solid fa-globe"></i> 7. हमारे बारे में (About Us & Co-Earth)</button>
+    </div>
+
+    <!-- COMMON LOGO & HEADER TEMPLATE JS WILL INJECT OR HTML STRUCT -->
+
+    <!-- POSTER 1: Work Flow -->
+    <div id="poster1" class="poster-container active">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>किसी भी कार्यक्रम का कार्यप्रवाह (WORK FLOW)</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-diagram-project"></i> योजना से लेकर रिपोर्टिंग और मूल्यांकन तक – पूर्ण कार्यप्रवाह
+        </div>
+
+        <!-- Top Row 1-5 -->
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-header s1">1. आवश्यकता पहचान</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-magnifying-glass-location"></i></div>
+                    <p>ग्राम स्वयंसेवक/ग्राम प्रमुख गांव की समस्या, जरूरत और लाभार्थियों की पहचान करते हैं।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> रिपोर्ट: ग्राम स्तर</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s2">2. प्रस्ताव तैयार करना</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-file-pen"></i></div>
+                    <p>ग्राम प्रमुख, ब्लॉक समन्वयक के साथ मिलकर कार्यक्रम का प्रस्ताव तैयार करते हैं।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> प्रस्ताव: ब्लॉक स्तर</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s3">3. समीक्षा एवं अनुमोदन</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-file-signature"></i></div>
+                    <p>ब्लॉक &rarr; जिला &rarr; राज्य &rarr; राष्ट्रीय स्तर पर प्रस्ताव की समीक्षा होती है।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> अनुमोदन पत्र</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s4">4. योजना एवं तैयारी</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <p>कार्य योजना, बजट, संसाधन, तारीख, स्थान, टीम का निर्धारण किया जाता है।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> विस्तृत Action Plan</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s5">5. संसाधन व फंड</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-coins"></i></div>
+                    <p>कोषाध्यक्ष द्वारा बजट स्वीकृति व आवश्यक संसाधन/सामग्री की व्यवस्था।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> फंड स्वीकृत</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row 6-10 -->
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-header s1">6. प्रचार-प्रसार</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                    <p>प्रचार एवं मीडिया प्रभारी द्वारा सोशल मीडिया, पोस्टर, प्रेस नोट, आमंत्रण आदि।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> प्रचार सामग्री</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s2">7. कार्यक्रम कार्यान्वयन</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-users-gear"></i></div>
+                    <p>निर्धारित तिथि, समय और स्थान पर कार्यक्रम का सफल आयोजन।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> संपन्न कार्यक्रम</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s3">8. दस्तावेजीकरण</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-camera-retro"></i></div>
+                    <p>फोटो, वीडियो, उपस्थिति, लाभार्थी सूची, मीडिया कवरेज एकत्र करना।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> दस्तावेज एवं प्रमाण</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s4">9. रिपोर्ट तैयार करना</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <p>कार्यक्रम की पूरी रिपोर्ट तैयार कर उच्च स्तर पर भेजी जाती है।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> फाइनल रिपोर्ट</div>
+                </div>
+            </div>
+            <div class="step-card">
+                <div class="step-header s5">10. समीक्षा एवं मूल्यांकन</div>
+                <div class="step-body">
+                    <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <p>अधिकारियों द्वारा समीक्षा कर कमियों और सुधार के बिंदु निर्धारित किए जाते हैं।</p>
+                    <div class="output-box"><i class="fa-solid fa-arrow-down"></i> सुधार सुझाव</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-title"><i class="fa-solid fa-users-line"></i> किस स्तर पर कौन क्या करेगा? (भूमिका और जिम्मेदारियाँ)</div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>स्तर</th>
+                    <th>ग्राम स्तर</th>
+                    <th>ब्लॉक स्तर</th>
+                    <th>जिला स्तर</th>
+                    <th>संभाग / मंडल स्तर</th>
+                    <th>राज्य स्तर</th>
+                    <th>राष्ट्रीय स्तर</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>मुख्य अधिकारी</strong></td>
+                    <td>ग्राम स्वयंसेवक, ग्राम प्रमुख</td>
+                    <td>ब्लॉक समन्वयक, महिला प्रतिनिधि</td>
+                    <td>जिलाध्यक्ष, जिला सचिव, परियोजना प्रबंधक</td>
+                    <td>संभागीय समन्वयक</td>
+                    <td>राज्य अध्यक्ष, राज्य सचिव, कोषाध्यक्ष</td>
+                    <td>कार्यकारी निदेशक, राष्ट्रीय अध्यक्ष</td>
+                </tr>
+                <tr>
+                    <td><strong>मुख्य कार्य</strong></td>
+                    <td>समस्या पहचानना, लाभार्थी सूची, सहयोग</td>
+                    <td>प्रस्ताव बनाना, छोटे कार्यक्रम आयोजन</td>
+                    <td>बड़े कार्यक्रम, अनुमति लेना, निगरानी</td>
+                    <td>जिलों का समन्वय, समीक्षा बैठक</td>
+                    <td>राज्य स्तर के कार्यक्रम, संसाधन उपलब्ध कराना</td>
+                    <td>नीति निर्माण, फंड प्रबंधन, संपूर्ण समन्वय</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer-banner">
+            नोट: यह कार्यप्रवाह सभी प्रकार के कार्यक्रमों (शिक्षा, स्वास्थ्य, पर्यावरण, महिला सशक्तिकरण आदि) पर समान रूप से लागू होगा।
+        </div>
+    </div>
+
+    <!-- POSTER 2: Reporting System -->
+    <div id="poster2" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>रिपोर्टिंग प्रणाली (Reporting System) – पूर्ण विवरण</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-chart-column"></i> पारदर्शिता, जवाबदेही और प्रभाव मापन के लिए एक मजबूत रिपोर्टिंग सिस्टम
+        </div>
+
+        <div class="graph-flow">
+            <div class="flow-node"><i class="fa-solid fa-house-chimney"></i>ग्राम स्तर</div>
+            <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+            <div class="flow-node"><i class="fa-solid fa-building"></i>ब्लॉक स्तर</div>
+            <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+            <div class="flow-node"><i class="fa-solid fa-city"></i>जिला स्तर</div>
+            <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+            <div class="flow-node"><i class="fa-solid fa-map-location-dot"></i>संभाग स्तर</div>
+            <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+            <div class="flow-node"><i class="fa-solid fa-map"></i>राज्य स्तर</div>
+            <div class="flow-arrow"><i class="fa-solid fa-circle-arrow-right"></i></div>
+            <div class="flow-node"><i class="fa-solid fa-flag"></i>राष्ट्रीय स्तर</div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-file-lines"></i> रिपोर्ट के प्रकार (Types of Reports)</div>
+                <ul class="styled-list">
+                    <li><strong>दैनिक रिपोर्ट:</strong> दिन भर की गतिविधि का संक्षिप्त विवरण</li>
+                    <li><strong>साप्ताहिक रिपोर्ट:</strong> सप्ताह भर के सभी कार्यों का सार</li>
+                    <li><strong>मासिक रिपोर्ट:</strong> पूरे महीने की विस्तृत रिपोर्ट</li>
+                    <li><strong>त्रैमासिक रिपोर्ट:</strong> 3 माह की प्रगति का विश्लेषण</li>
+                    <li><strong>वार्षिक रिपोर्ट:</strong> वर्ष भर की समेकित रिपोर्ट</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-clock"></i> रिपोर्ट भेजने की समय सीमा (Timeline)</div>
+                <table class="custom-table">
+                    <tr><th>रिपोर्ट</th><th>समय सीमा</th></tr>
+                    <tr><td>दैनिक रिपोर्ट</td><td>अगले दिन शाम 6 बजे तक</td></tr>
+                    <tr><td>साप्ताहिक रिपोर्ट</td><td>हर सोमवार शाम 6 बजे तक</td></tr>
+                    <tr><td>मासिक रिपोर्ट</td><td>अगले माह की 5 तारीख तक</td></tr>
+                    <tr><td>वार्षिक रिपोर्ट</td><td>अगले वर्ष की 15 जनवरी तक</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            "सही रिपोर्टिंग - सही दिशा - सही परिणाम" | पारदर्शिता हमारी पहचान, जवाबदेही हमारा धर्म।
+        </div>
+    </div>
+
+    <!-- POSTER 3: Fund Management -->
+    <div id="poster3" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>फंड प्रबंधन प्रणाली (Fund Management System)</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-vault"></i> एक रुपये से लेकर करोड़ों तक - पारदर्शी, सुरक्षित और जवाबदेह प्रबंधन
+        </div>
+
+        <div class="card-title"><i class="fa-solid fa-scale-balanced"></i> फंड स्वीकृति अधिकार सीमा</div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>राशि सीमा</th>
+                    <th>स्वीकृति करने वाले अधिकारी</th>
+                    <th>हस्ताक्षर नियम</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>₹ 1 – ₹ 50,000</td>
+                    <td>जिला अध्यक्ष / जिला कोषाध्यक्ष</td>
+                    <td>2 हस्ताक्षर <i class="fa-solid fa-file-signature"></i></td>
+                </tr>
+                <tr>
+                    <td>₹ 50,000 – ₹ 5 लाख</td>
+                    <td>राज्य अध्यक्ष / राज्य कोषाध्यक्ष</td>
+                    <td>2 हस्ताक्षर <i class="fa-solid fa-file-signature"></i></td>
+                </tr>
+                <tr>
+                    <td>₹ 5 लाख – ₹ 25 लाख</td>
+                    <td>राष्ट्रीय अध्यक्ष / राष्ट्रीय कोषाध्यक्ष / कार्यकारी निदेशक</td>
+                    <td>3 हस्ताक्षर <i class="fa-solid fa-file-signature"></i></td>
+                </tr>
+                <tr>
+                    <td>₹ 25 लाख से ऊपर</td>
+                    <td>राष्ट्रीय कार्यकारिणी (अध्यक्ष, सचिव, कोषाध्यक्ष, निदेशक)</td>
+                    <td>4 हस्ताक्षर <i class="fa-solid fa-file-signature"></i></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-hand-holding-dollar"></i> फंड के स्रोत</div>
+                <ul class="styled-list">
+                    <li>व्यक्तिगत दान</li>
+                    <li>कॉर्पोरेट CSR फंड</li>
+                    <li>सरकारी अनुदान</li>
+                    <li>क्राउड फंडिंग</li>
+                    <li>सदस्यता शुल्क</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-receipt"></i> भुगतान प्रक्रिया</div>
+                <ul class="styled-list">
+                    <li>बिल / इनवॉइस प्राप्त करना</li>
+                    <li>सत्यापन (कार्य, मात्रा, गुणवत्ता)</li>
+                    <li>स्वीकृति आदेश</li>
+                    <li>बैंक ट्रांसफर / UPI / चेक</li>
+                    <li>भुगतान रसीद संकलन</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-book"></i> वित्तीय रिकॉर्ड (Ledgers)</div>
+                <ul class="styled-list">
+                    <li>दान रजिस्टर</li>
+                    <li>कैश बुक & बैंक बुक</li>
+                    <li>व्यय रजिस्टर</li>
+                    <li>प्रोजेक्ट वाइज रजिस्टर</li>
+                    <li>एसेट रजिस्टर</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            पारदर्शिता | जवाबदेही | सेवा | ईमानदारी | विकास &rarr; एक कदम बेहतर समाज की ओर
+        </div>
+    </div>
+
+    <!-- POSTER 4: Meeting & Review -->
+    <div id="poster4" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>बैठक और समीक्षा प्रणाली (Meeting & Review System)</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-comments"></i> नियमित बैठकें, प्रभावी समीक्षा और सतत सुधार - संगठन की मजबूती का आधार
+        </div>
+
+        <div class="card-title"><i class="fa-solid fa-calendar-days"></i> बैठक की आवृत्ति (Frequency of Meetings)</div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>स्तर</th>
+                    <th>नियमित बैठक</th>
+                    <th>समीक्षा बैठक</th>
+                    <th>विशेष बैठक</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ग्राम स्तर</td>
+                    <td>साप्ताहिक (हर रविवार)</td>
+                    <td>मासिक (पहला रविवार)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+                <tr>
+                    <td>ब्लॉक स्तर</td>
+                    <td>पाक्षिक (हर 15 दिन)</td>
+                    <td>मासिक (दूसरा शनिवार)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+                <tr>
+                    <td>जिला स्तर</td>
+                    <td>मासिक (पहला शनिवार)</td>
+                    <td>त्रैमासिक (हर 3 माह)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+                <tr>
+                    <td>संभाग / मंडल स्तर</td>
+                    <td>त्रैमासिक (हर 3 माह)</td>
+                    <td>छमाही (हर 6 माह)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+                <tr>
+                    <td>राज्य स्तर</td>
+                    <td>छमाही (हर 6 माह)</td>
+                    <td>वार्षिक (हर वर्ष)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+                <tr>
+                    <td>राष्ट्रीय स्तर</td>
+                    <td>छमाही (हर 6 माह)</td>
+                    <td>वार्षिक (हर वर्ष)</td>
+                    <td>आवश्यकतानुसार</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-list-check"></i> बैठक की कार्यसूची (Agenda)</div>
+                <ul class="styled-list">
+                    <li>स्वागत और उपस्थिति दर्ज करना</li>
+                    <li>पिछली बैठक की कार्यवाही की पुष्टि</li>
+                    <li>कार्यक्रमों की प्रगति रिपोर्ट</li>
+                    <li>वित्तीय स्थिति की समीक्षा</li>
+                    <li>समस्याओं और चुनौतियों पर चर्चा</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fa-solid fa-gavel"></i> बैठक में अनुशासन और आचरण</div>
+                <ul class="styled-list">
+                    <li>समय पर पहुंचना अनिवार्य</li>
+                    <li>मोबाइल बंद या साइलेंट रखें</li>
+                    <li>एक समय में एक ही व्यक्ति बोले</li>
+                    <li>सम्मानजनक भाषा का प्रयोग करें</li>
+                    <li>व्यक्तिगत नहीं, विषय पर चर्चा करें</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            नियमित बैठक – सही समीक्षा – समय पर निर्णय – बेहतर कार्यान्वयन – मजबूत संगठन
+        </div>
+    </div>
+
+    <!-- POSTER 5: Management System Overview -->
+    <div id="poster5" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>प्रबंधन प्रणाली (MANAGEMENT SYSTEM)</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-sitemap"></i> संगठन की संरचना, कार्य प्रणाली और रिपोर्टिंग सिस्टम
+        </div>
+
+        <div class="card-title"><i class="fa-solid fa-crown"></i> राष्ट्रीय स्तर (NATIONAL LEVEL)</div>
+        <div class="grid-4" style="margin-bottom: 12px;">
+            <div class="card" style="text-align: center; background: #e0f2fe;">
+                <strong>अध्यक्ष</strong>
+                <p style="font-size: 10px; margin-top: 4px;">मार्गदर्शक & बैठकों की अध्यक्षता</p>
+            </div>
+            <div class="card" style="text-align: center; background: #dcfce7;">
+                <strong>उपाध्यक्ष</strong>
+                <p style="font-size: 10px; margin-top: 4px;">अध्यक्ष की अनुपस्थिति में कार्य</p>
+            </div>
+            <div class="card" style="text-align: center; background: #fef3c7;">
+                <strong>सचिव</strong>
+                <p style="font-size: 10px; margin-top: 4px;">प्रशासनिक कार्य & वृत्त सुरक्षित</p>
+            </div>
+            <div class="card" style="text-align: center; background: #ffe4e6;">
+                <strong>कोषाध्यक्ष</strong>
+                <p style="font-size: 10px; margin-top: 4px;">समस्त वित्तीय लेनदेन & ऑडिट</p>
+            </div>
+        </div>
+
+        <div class="card-title"><i class="fa-solid fa-layer-group"></i> संगठनात्मक ढांचा (Organizational Hierarchy)</div>
+        <div class="graph-flow" style="flex-direction: column; gap: 6px;">
+            <div class="flow-node" style="width: 100%;">1. राष्ट्रीय स्तर (National Level) <i class="fa-solid fa-arrow-down"></i></div>
+            <div class="flow-node" style="width: 90%;">2. राज्य स्तर (State Level) <i class="fa-solid fa-arrow-down"></i></div>
+            <div class="flow-node" style="width: 80%;">3. संभाग / मंडल स्तर (Divisional Level) <i class="fa-solid fa-arrow-down"></i></div>
+            <div class="flow-node" style="width: 70%;">4. जिला स्तर (District Level) <i class="fa-solid fa-arrow-down"></i></div>
+            <div class="flow-node" style="width: 60%;">5. ब्लॉक / तहसील स्तर (Block Level) <i class="fa-solid fa-arrow-down"></i></div>
+            <div class="flow-node" style="width: 50%;">6. ग्राम स्तर (Village Level)</div>
+        </div>
+
+        <div class="grid-4">
+            <div class="card">
+                <div class="card-title">कार्यप्रवाह</div>
+                <p style="font-size: 10px;">आवश्यकता पहचान &rarr; योजना &rarr; अनुमोदन &rarr; संसाधन &rarr; कार्यान्वयन &rarr; रिपोर्टिंग</p>
+            </div>
+            <div class="card">
+                <div class="card-title">फंड प्रबंधन</div>
+                <p style="font-size: 10px;">प्रस्ताव &rarr; अनुमोदन &rarr; फंड जारी &rarr; खर्च & बिल &rarr; हिसाब रिपोर्ट &rarr; ऑडिट</p>
+            </div>
+            <div class="card">
+                <div class="card-title">रिपोर्टिंग</div>
+                <p style="font-size: 10px;">नाम, तारीख, स्थान, उद्देश्य, लाभार्थी, खर्च विवरण, फोटो/वीडियो, कार्य योजना</p>
+            </div>
+            <div class="card">
+                <div class="card-title">समीक्षा चक्र</div>
+                <p style="font-size: 10px;">ग्राम (साप्ताहिक), ब्लॉक (15 दिन), जिला (माह), राज्य (3 माह), राष्ट्रीय (6 माह)</p>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            सदस्य पंजीकरण | डिजिटल डेटा | सोशल मीडिया | प्रेस/मीडिया | स्वयंसेवक प्रशिक्षण | वार्षिक रिपोर्ट
+        </div>
+    </div>
+
+    <!-- POSTER 6: 365 Days Volunteer Task Roster -->
+    <div id="poster6" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>365-दिन स्वयंसेवक कार्य रोस्टर (Volunteers Task Roster)</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="header-sub-banner">
+            <i class="fa-solid fa-calendar-check"></i> पूरे 12 महीने (365 दिन) का जमीनी कार्य रोस्टर - अपने आसपास सूक्ष्म-जिम्मेदारी
+        </div>
+
+        <div class="roster-grid">
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-droplet"></i> माह 1: जल संरक्षण <span class="month-tag">दिन 1-30</span></h4>
+                <ul class="styled-list">
+                    <li>टपकते नलों व वाटर पाइप की मरम्मत करवाना।</li>
+                    <li>घरों में वर्षा जल संचयन (Rainwater Harvest) जागरूकता।</li>
+                    <li>तालाबों व हैंडपंपों के आसपास स्वच्छता अभियान।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-tree"></i> माह 2: वृक्षारोपण <span class="month-tag">दिन 31-60</span></h4>
+                <ul class="styled-list">
+                    <li>स्थानीय किस्म के 10 पौधे लगाना और गोद लेना।</li>
+                    <li>पेड़ों में नियमित पानी देना और ट्री गार्ड लगाना।</li>
+                    <li>प्लास्टिक के बीजों के बजाय जैविक खाद का प्रयोग।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-recycle"></i> माह 3: प्लास्टिक मुक्ति <span class="month-tag">दिन 61-90</span></h4>
+                <ul class="styled-list">
+                    <li>सिंगल यूज़ प्लास्टिक का बहिष्कार अभियान।</li>
+                    <li>कपड़े के थैलों का मुफ्त वितरण।</li>
+                    <li>सार्वजनिक स्थानों से प्लास्टिक कचरा एकत्रीकरण।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-book-reader"></i> माह 4: शिक्षा जागरूकता <span class="month-tag">दिन 91-120</span></h4>
+                <ul class="styled-list">
+                    <li>अशिक्षित/वंचित बच्चों के लिए संध्या क्लास।</li>
+                    <li>पुरानी किताबें व स्टेशनरी बैंक की स्थापना।</li>
+                    <li>बाल श्रम विरोधी और स्कूल दाखिला अभियान।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-stethoscope"></i> माह 5: स्वास्थ्य & स्वच्छता <span class="month-tag">दिन 121-150</span></h4>
+                <ul class="styled-list">
+                    <li>निःशुल्क प्राथमिक स्वास्थ्य व रक्तदान शिविर।</li>
+                    <li>किशोरी बालिकाओं हेतु सेनेटरी नैपकिन वितरण।</li>
+                    <li>खुले में शौच मुक्ति एवं हाथ धोने के नियम सिखाना।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-person-dress"></i> माह 6: महिला सशक्तिकरण <span class="month-tag">दिन 151-180</span></h4>
+                <ul class="styled-list">
+                    <li>महिला स्व-सहायता समूहों (SHGs) का गठन।</li>
+                    <li>सिलाई, हस्तशिल्प व डिजिटल साक्षरता क्लास।</li>
+                    <li>घरेलू हिंसा के विरुद्ध जागरूकता शिविर।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-dove"></i> माह 7: जीव-जंतु संरक्षण <span class="month-tag">दिन 181-210</span></h4>
+                <ul class="styled-list">
+                    <li>पक्षियों के लिए पानी के परिंडे (सकोरे) रखना।</li>
+                    <li>बेसहारा पशुओं के लिए भोजन व प्राथमिक उपचार।</li>
+                    <li>पशु क्रूरता निवारण कानून की जानकारी देना।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-sun"></i> माह 8: सौर ऊर्जा & ऊर्जा <span class="month-tag">दिन 211-240</span></h4>
+                <ul class="styled-list">
+                    <li>सौर ऊर्जा उपकरणों के उपयोग को बढ़ावा।</li>
+                    <li>बिजली की बचत: अनावश्यक लाइट/फैन बंद करना।</li>
+                    <li>जैविक उर्वरक व गोबर गैस का प्रोत्साहन।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-hand-fist"></i> माह 9: अधिकार & कानून <span class="month-tag">दिन 241-270</span></h4>
+                <ul class="styled-list">
+                    <li>RTI और मानवाधिकारों पर कार्यशाला।</li>
+                    <li>सरकारी योजनाओं (आवास, पेंशन) का लाभ दिलाना।</li>
+                    <li>भ्रष्टाचार विरोधी जागरूकता अभियान।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-seedling"></i> माह 10: जैविक कृषि <span class="month-tag">दिन 271-300</span></h4>
+                <ul class="styled-list">
+                    <li>रसायन मुक्त खेती व वर्मीकंपोस्ट बनाना।</li>
+                    <li>पराली न जलाने हेतु किसानों को समझाना।</li>
+                    <li>किचन गार्डन / न्यूट्रिशन गार्डन प्रोत्साहन।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-scale-unbalanced"></i> माह 11: नशा मुक्ति <span class="month-tag">दिन 301-330</span></h4>
+                <ul class="styled-list">
+                    <li>युवाओं के लिए नशा मुक्ति अभियान व काउंसलिंग।</li>
+                    <li>खेलकूद एवं योग प्रतियोगिताओं का आयोजन।</li>
+                    <li>मानसिक स्वास्थ्य पर चर्चा एवं परामर्श।</li>
+                </ul>
+            </div>
+            <div class="roster-card">
+                <h4><i class="fa-solid fa-award"></i> माह 12: मूल्यांकन & सम्मान <span class="month-tag">दिन 331-365</span></h4>
+                <ul class="styled-list">
+                    <li>वार्षिक सामाजिक प्रभाव (Impact Audit)।</li>
+                    <li>उत्कृष्ट स्वयंसेवकों को प्रमाण-पत्र व सम्मान।</li>
+                    <li>अगले वर्ष की रणनीति और 'Co-Earth' संकल्प।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            <i class="fa-solid fa-heart"></i> "हर दिन एक छोटा कदम, पूरी धरती के लिए एक बड़ी क्रांति।" - Develish One Foundation
+        </div>
+    </div>
+
+    <!-- POSTER 7: About Organisation & Co-Earth Movement -->
+    <div id="poster7" class="poster-container">
+        <div class="poster-header">
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+            <div class="header-titles">
+                <h1>DEVELISH ONE FOUNDATION</h1>
+                <h2>एक नई क्रांति का आह्वान: Co-Earth आंदोलन</h2>
+            </div>
+            <div class="logo-box">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhEU8w_H9L2saAhkasgsXa74PpTuuqDCLfI6xlOX-x15imG0Zh22m7QH0K6aOY806F5N2btYWn9596nIsYGClysoH_9zUZZn5sU8BuFAQRf-oNSKRK9twSKkfLrFETAZEQ9htTmyi302UVBTp06iKReiN9AHdiiWNo6fRbdf9pycFXwvwKCl88SHr_osLf8/s320/1000071813.png" alt="Logo">
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 12px;">
+            <div class="card about-text">
+                <h3 style="color:var(--navy-dark); margin-bottom:8px;"><i class="fa-solid fa-earth-americas"></i> Co-Earth आंदोलन की सोच</h3>
+                <p><strong>नमस्कार!</strong> मैं विशाल पाण्डेय, अपने भाई विमल पाण्डेय और मित्र सचिन सिंह के साथ मिलकर 'Develish One Foundation' (स्थापना: 7 अप्रैल 2025) का प्रतिनिधित्व कर रहा हूँ।</p>
+                <p>हमने इस संस्था की शुरुआत एक बेहद स्पष्ट और क्रांतिकारी सोच के साथ की है—हम दुनिया के हर इंसान को इस संस्था से जोड़कर यह एहसास दिलाना चाहते हैं कि हमारी पृथ्वी की आज जो दुर्दशा हो रही है, उसकी ज़िम्मेदार कोई अकेली सरकार या देश नहीं, बल्कि हम और आप हैं।</p>
+                <p>यदि हम ठान लें, तो हमारी यह धरती हमेशा वैसी ही सुंदर बनी रहेगी जैसी इसे प्रकृति ने बनाया था। इंसान ही एकमात्र ऐसा जीव है जो लालच के लिए प्रकृति को बेहिसाब नुकसान पहुँचाता है।</p>
+            </div>
+            <div class="card about-text">
+                <h3 style="color:var(--navy-dark); margin-bottom:8px;"><i class="fa-solid fa-chart-line"></i> हम ही क्यों हैं ज़िम्मेदार? (आंकड़ों की सच्चाई)</h3>
+                <p>रोज़मर्रा की गतिविधियों के कारण औसतन एक इंसान हर दिन लगभग 30 से 45 लीटर पानी बर्बाद कर देता है। पूरे विश्व में 5.8 अरब लोगों द्वारा बर्बादी का यह आँकड़ा रोज़ाना 174 से 261 अरब लीटर तक पहुँच जाता है।</p>
+                <p>वहीं 2.2 अरब लोग सुरक्षित पीने के पानी से वंचित हैं। यदि पानी की पहुँच वाले 5.8 अरब लोग रोज़ाना केवल 5 लीटर पानी बचा लें, तो हर दिन 29 अरब लीटर पानी की बचत होगी, जिससे 58 करोड़ वंचित लोगों की प्यास बुझ सकती है!</p>
+                <p><strong>यही है हमारी 'सूक्ष्म-ज़िम्मेदारी' (Micro-Responsibility)।</strong></p>
+            </div>
+        </div>
+
+        <!-- Registration & Contact Grid -->
+        <div class="grid-2">
+            <div class="card contact-box">
+                <h4 style="color: var(--navy-dark); margin-bottom: 8px;"><i class="fa-solid fa-id-card"></i> कानूनी पंजीकरण & टैक्स छूट (Legal Details)</h4>
+                <div><i class="fa-solid fa-check-double"></i> <strong>Company Type:</strong> Section 8 Company (MCA Licensed)</div>
+                <div><i class="fa-solid fa-barcode"></i> <strong>CIN:</strong> U88900UP2025NPL220764</div>
+                <div><i class="fa-solid fa-calendar-day"></i> <strong>Registration Date:</strong> April 7, 2025 | RoC Kanpur</div>
+                <div><i class="fa-solid fa-percent"></i> <strong>Tax Exemptions:</strong> 12A & 80G Registered (No. AALCD5836DF20261) - 50% Tax Deduction for Donors</div>
+                <div><i class="fa-solid fa-location-dot"></i> <strong>Official Address:</strong> Bharat Lal, Ramva Pur Dakahi, Post Katra, Police Station Ikauna, District Shrawasti, UP - 271805</div>
+            </div>
+            <div class="card contact-box">
+                <h4 style="color: var(--navy-dark); margin-bottom: 8px;"><i class="fa-solid fa-address-book"></i> संपर्क करें (Reach Us)</h4>
+                <div><i class="fa-solid fa-map-pin"></i> Ramwapur Dakahi, Post Katra, Shrawasti, UP - 271805</div>
+                <div><i class="fa-solid fa-phone"></i> +91 9721061660, 9628591501, 9984839190</div>
+                <div><i class="fa-solid fa-envelope"></i> develishngo@gmail.com, develishngo@zohomail.in</div>
+                <div><i class="fa-solid fa-globe"></i> Website: develishngo.in</div>
+                <div style="margin-top: 10px;">
+                    <a href="https://www.develishngo.in/#volunteer" target="_blank" style="background: var(--navy-dark); color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block;">
+                        <i class="fa-solid fa-handshake-angle"></i> Click to Join as a Volunteer
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-banner">
+            "अकेले कोई नहीं, एक साथ सभी!" - हमारी संस्था का संकल्प: Co-Earth आंदोलन
+        </div>
+    </div>
+
+    <script>
+        function showPoster(posterIndex) {
+            // Hide all posters
+            const posters = document.querySelectorAll('.poster-container');
+            posters.forEach(p => p.classList.remove('active'));
+
+            // Remove active class from buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            // Show selected poster & set button active
+            document.getElementById(`poster${posterIndex}`).classList.add('active');
+            buttons[posterIndex - 1].classList.add('active');
+            
+            // Scroll smooth to top
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
+</body>
+</html>
