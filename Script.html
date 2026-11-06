@@ -1,0 +1,123 @@
+/**
+ * Develish One Foundation — Letter / Application / Board Resolution
+ * Google Apps Script Web App (doPost)
+ *
+ * Sheet columns (13 cols):
+ * A: Timestamp  | B: Document Type | C: Language | D: Document Date
+ * E: Sender Name (comma-separated)
+ * F: Position 1 | G: Position 2 | H: Position 3 (pipe-split)
+ * I: Reference Number | J: Recipient | K: Subject
+ * L: Main Content | M: Status
+ */
+
+const SHEET_NAME = 'Develish_Data';   // <-- apni sheet ka naam yahan
+const MAX_POSITION_COLS = 3;
+
+function doPost(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) sheet = ss.getSheets()[0]; // fallback: first sheet
+
+    const data = JSON.parse(e.postData.contents);
+
+    // -------- Positions ko split karo (pipe separator) --------
+    const rawPos = String(data.senderPosition || '').trim();
+    let positions = rawPos
+      .split('|')
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
+
+    // Agar 3 se zyada hain, to extra ko 3rd column me merge karo
+    if (positions.length > MAX_POSITION_COLS) {
+      const extras = positions.slice(MAX_POSITION_COLS - 1);
+      positions = positions.slice(0, MAX_POSITION_COLS - 1);
+      positions.push(extras.join(' | '));
+    }
+
+    // Pad to 3 columns
+    while (positions.length < MAX_POSITION_COLS) positions.push('');
+
+    // -------- Timestamp --------
+    const timestamp = data.timestamp || new Date().toISOString();
+
+    // -------- Row build --------
+    const row = [
+      timestamp,                                     // A: Timestamp
+      data.docType    || '',                         // B: Document Type
+      data.language   || '',                         // C: Language
+      data.date       || '',                         // D: Document Date
+      data.senderName || '',                         // E: Sender Name (comma)
+      positions[0],                                  // F: Position 1
+      positions[1],                                  // G: Position 2
+      positions[2],                                  // H: Position 3
+      data.refNo      || '',                         // I: Reference Number
+      data.recipient  || '',                         // J: Recipient
+      data.subject    || '',                         // K: Subject
+      data.matter     || '',                         // L: Main Content
+      '✅ Saved'                                     // M: Status
+    ];
+
+    sheet.appendRow(row);
+
+    // Auto-resize / formatting (optional, safe)
+    try {
+      const lastRow = sheet.getLastRow();
+      sheet.getRange(lastRow, 12).setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+      sheet.getRange(lastRow, 1).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    } catch (fmtErr) { /* ignore */ }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        success: true,
+        message: 'Saved successfully',
+        row: sheet.getLastRow(),
+        positionsSaved: positions
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        success: false,
+        error: String(err),
+        stack: err && err.stack ? err.stack : ''
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput('✅ Develish One Foundation API is running. Use POST to save data.')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+/* ============================================================
+ *  OPTIONAL: Agar sheet ke existing header rows ko ensure karna ho
+ *  to yeh ek baar run karein (Editor > Run > ensureHeaders)
+ * ============================================================ */
+function ensureHeaders() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) sheet = ss.getSheets()[0];
+
+  const headers = [
+    'Timestamp', 'Document Type', 'Language', 'Document Date',
+    'Sender Name', 'Position 1', 'Position 2', 'Position 3',
+    'Reference Number', 'Recipient', 'Subject', 'Main Content', 'Status'
+  ];
+
+  const firstRow = sheet.getRange(1, 1, 1, headers.length).getValues()[0];
+  const isEmpty = firstRow.every(v => v === '' || v === null);
+  const looksLikeOldHeader = firstRow.join('|') !== headers.join('|');
+
+  if (isEmpty || looksLikeOldHeader) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length)
+      .setFontWeight('bold')
+      .setBackground('#0c4e6e')
+      .setFontColor('#ffffff');
+    sheet.setFrozenRows(1);
+  }
+}
